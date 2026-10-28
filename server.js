@@ -513,26 +513,32 @@ function getFooterHtml() {
 // HELPER: RENDER A PRODUCT CARD COMPONENT
 function renderProductCard(p) {
   const secondaryImg = (p.images && p.images.length > 1) ? p.images[1] : p.featured_image;
+  const numAngles = p.images ? p.images.length : 1;
+  const badgeClass = p.badge && p.badge.includes('PLAYER') ? 'badge-player' : (p.badge && p.badge.includes('WORLD') ? 'badge-hot' : 'badge-new');
+  
   return `
   <div class="product-card product-card--secondary-hover">
     <div class="product-card__media">
-      ${p.badge ? `<span class="badge ${p.badge.includes('PLAYER') ? 'badge-player' : (p.badge.includes('WORLD') ? 'badge-hot' : 'badge-new')}" style="position: absolute; top: 1rem; left: 1rem; z-index: 3;">${p.badge}</span>` : ''}
-      <a href="/products/${p.handle}">
+      ${p.badge ? `<span class="badge ${badgeClass} product-card__badge-tag">${p.badge}</span>` : ''}
+      <span class="product-card__angles-pill">📷 ${numAngles} Angles</span>
+      <a href="/products/${p.handle}" class="product-card__media-link" aria-label="${p.title}">
         <img src="${p.featured_image}" class="product-card__image" alt="${p.title}" loading="lazy">
         <img src="${secondaryImg}" class="product-card__secondary-image" alt="${p.title} - angle 2" loading="lazy">
       </a>
     </div>
     <div class="product-card__content">
-      <span class="product-card__category">${p.type} • ${p.images ? p.images.length : 1} Angles</span>
+      <div class="product-card__meta">
+        <span class="product-card__category">${p.type}</span>
+      </div>
       <h3 class="product-card__title">
-        <a href="/products/${p.handle}">${p.title}</a>
+        <a href="/products/${p.handle}" title="${p.title}">${p.title}</a>
       </h3>
       <div class="product-card__price">
         <span class="price-current ${p.compare_at_price > p.price ? 'has-sale' : ''}">Tk ${(p.price / 100).toLocaleString()}</span>
         ${p.compare_at_price > p.price ? `<span class="price-compare">Tk ${(p.compare_at_price / 100).toLocaleString()}</span>` : ''}
       </div>
-      <a href="/products/${p.handle}" class="btn btn-outline btn-block" style="margin-top: 1.2rem;">
-        View Angles & Order &rarr;
+      <a href="/products/${p.handle}" class="btn btn-outline btn-block product-card__btn">
+        View Product
       </a>
     </div>
   </div>
@@ -553,7 +559,7 @@ app.get('/', (req, res) => {
   <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Regards Sports Club – Official Thailand Imported Football Kits & Sports Apparel</title>
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="alternate icon" type="image/png" href="/assets/favicon.png">
@@ -754,7 +760,7 @@ app.get('/products/:handle', (req, res) => {
   <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>${prod.title} – Regards Sports Club</title>
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="alternate icon" type="image/png" href="/assets/favicon.png">
@@ -1027,25 +1033,33 @@ app.get('/products/:handle', (req, res) => {
         });
 
         // ==========================================
-        // HOVER ZOOM EFFECT (2.2X MAGNIFIER)
+        // HOVER ZOOM EFFECT (DESKTOP MOUSE ONLY - PREVENTS MOBILE TOUCH ZOOM)
         // ==========================================
-        zoomStage.addEventListener('mouseenter', () => {
-          if (zoomHint) zoomHint.style.opacity = '0';
-          mainImg.style.transform = 'scale(2.2)';
-        });
+        const canHover = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches;
+        if (canHover) {
+          zoomStage.addEventListener('mouseenter', () => {
+            if (zoomHint) zoomHint.style.opacity = '0';
+            mainImg.style.transform = 'scale(2.2)';
+          });
 
-        zoomStage.addEventListener('mousemove', (e) => {
-          const rect = zoomStage.getBoundingClientRect();
-          const x = ((e.clientX - rect.left) / rect.width) * 100;
-          const y = ((e.clientY - rect.top) / rect.height) * 100;
-          mainImg.style.transformOrigin = x + "% " + y + "%";
-        });
+          zoomStage.addEventListener('mousemove', (e) => {
+            const rect = zoomStage.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            mainImg.style.transformOrigin = x + "% " + y + "%";
+          });
 
-        zoomStage.addEventListener('mouseleave', () => {
-          if (zoomHint) zoomHint.style.opacity = '1';
+          zoomStage.addEventListener('mouseleave', () => {
+            if (zoomHint) zoomHint.style.opacity = '1';
+            mainImg.style.transformOrigin = 'center center';
+            mainImg.style.transform = 'scale(1)';
+          });
+        } else {
+          // Mobile / touch devices: completely disable transform and hint
+          mainImg.style.transform = 'none';
           mainImg.style.transformOrigin = 'center center';
-          mainImg.style.transform = 'scale(1)';
-        });
+          if (zoomHint) zoomHint.style.display = 'none';
+        }
       })();
     </script>
   </body>
@@ -1162,7 +1176,7 @@ app.get('/collections/:handle', (req, res) => {
   <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>${currentMeta.title} – Regards Sports Club</title>
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="alternate icon" type="image/png" href="/assets/favicon.png">
@@ -1257,7 +1271,7 @@ app.get('/pages/contact', (req, res) => {
   <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Showroom Location & Contact – Regards Sports Club</title>
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="alternate icon" type="image/png" href="/assets/favicon.png">
