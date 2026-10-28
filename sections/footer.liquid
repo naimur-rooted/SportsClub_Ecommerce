@@ -1,59 +1,69 @@
-<footer style="background-color: var(--color-dark); color: #fff; padding-top: 6rem; padding-bottom: 4rem; border-top: 1px solid #222;">
-  <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4rem; margin-bottom: 4rem;">
+<footer class="site-footer">
+  <div class="container site-footer__grid">
     <!-- Column 1: Brand Info -->
-    <div>
-      <span class="site-logo" style="color: #fff; margin-bottom: 1.5rem;">REGARDS SPORTS <span>CLUB</span></span>
-      <p style="color: #999; font-size: 1.4rem;">
-        Dhaka's leading omnichannel football jersey & sportswear brand. Authentic player editions, retro kits, turf shoes, and gym apparel.
+    <div class="site-footer__brand">
+      <div style="margin-bottom: 1.8rem;">
+        <a href="/"><img src="{{ 'logo-white.svg' | asset_url }}" alt="Regards Sports Club" style="height: 44px; width: auto; max-width: 220px;"></a>
+      </div>
+      <p>
+        Bangladesh's premier omnichannel D2C sports destination for Thailand-imported kits, player editions, turf shoes, and custom line-item jersey printing.
       </p>
-      <p style="color: #999; font-size: 1.3rem; margin-top: 1.5rem;">
-        <strong>Trade License:</strong> TRAD/DSCC/002648/2025
+      <p class="site-footer__meta">
+        🏛️ <strong>Trade License:</strong> TRAD/DSCC/002648/2025<br>
+        📍 <strong>Showroom:</strong> House 48, Road 03, Block E, Banasree, Rampura, Dhaka
       </p>
     </div>
 
-    <!-- Column 2: Quick Links -->
+    <!-- Column 2: All Categories -->
     <div>
-      <h4 style="color: #fff; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 1.5rem;">Shop Collections</h4>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; font-size: 1.4rem; color: #999;">
-        <li><a href="/collections/2026-27-player-edition">2026/27 Player Editions</a></li>
-        <li><a href="/collections/world-cup-2026">World Cup 2026 Kits</a></li>
-        <li><a href="/collections/retro-jerseys">Classic Retro Editions</a></li>
-        <li><a href="/collections/turf-shoes">Football Turf Boots</a></li>
-        <li><a href="/collections/trousers-shorts">Training Trousers</a></li>
-      </ul>
+      <h4 class="footer-title">All Categories</h4>
+      <div class="footer-links">
+        <a href="/collections/2026-27-player-edition">Club Jersey 26–27</a>
+        <a href="/collections/world-cup-2026">World Cup 2026 Kits</a>
+        <a href="/collections/national-jersey">National Team Jerseys</a>
+        <a href="/collections/retro-jersey">Classic Retro Kits</a>
+        <a href="/collections/kids-jersey">Kids Full Kits</a>
+        <a href="/collections/trousers-shorts">Training Trousers & Shorts</a>
+        <a href="/collections/turf-shoes">Turf & Indoor Shoes</a>
+        <a href="/collections/accessories">Grip Socks & Accessories</a>
+      </div>
     </div>
 
-    <!-- Column 3: Customer Care & Policies -->
+    <!-- Column 3: Customer Care -->
     <div>
-      <h4 style="color: #fff; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 1.5rem;">Customer Care</h4>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; font-size: 1.4rem; color: #999;">
-        <li><a href="/pages/shipping-information">Shipping & Delivery Rates</a></li>
-        <li><a href="/pages/return-exchange-policy">3-Day Exchange Policy</a></li>
-        <li><a href="/pages/payment-refund-policy">Payment & Refund Policy</a></li>
-        <li><a href="/pages/contact">Showroom Location & Contact</a></li>
-      </ul>
+      <h4 class="footer-title">Customer Care</h4>
+      <div class="footer-links">
+        <a href="/pages/contact">Showroom & Visit Guide</a>
+        <a href="#size-chart" onclick="alert('Official Thai Fit: Size M (38-40in), L (40-42in), XL (42-44in), 2XL (44-46in)'); return false;">Measurement Size Chart</a>
+        <a href="#shipping" onclick="alert('Nationwide Delivery: Dhaka City ৳70 (1-2 days), Outside Dhaka ৳120 (2-3 days). Full COD.'); return false;">Shipping & Courier Policy</a>
+        <a href="#returns" onclick="alert('7-day instant exchange for size issues at Banasree showroom or via courier.'); return false;">7-Day Easy Exchange</a>
+        <a href="https://wa.me/8801754724991" target="_blank" style="color: var(--color-success); font-weight: 700;">WhatsApp Hotline: +880 1754-724991</a>
+      </div>
     </div>
 
-    <!-- Column 4: Newsletter Promo -->
-    <div>
-      <h4 style="color: #fff; font-size: 1.6rem; text-transform: uppercase; margin-bottom: 1.5rem;">Get 5% Off First Kit</h4>
-      <p style="color: #999; font-size: 1.4rem; margin-bottom: 1.2rem;">
-        Subscribe to receive new World Cup drops, restock alerts, and VIP discounts.
-      </p>
-      <form style="display: flex; gap: 0.5rem;" onsubmit="alert('Thank you for subscribing! Your 5% discount code is: IMRAN5'); return false;">
-        <input type="email" placeholder="Enter your email" required style="padding: 1.2rem; border-radius: var(--radius-btn); border: 1px solid #444; background: #222; color: #fff; flex: 1;">
-        <button type="submit" class="btn btn-accent" style="padding: 1.2rem 2rem;">Join</button>
+    <!-- Column 4: VIP Drop Alerts -->
+    <div class="footer-newsletter">
+      <h4 class="footer-title">VIP Drop Alerts</h4>
+      <p>Subscribe for secret midnight drops, retro restocks, and exclusive Bangladesh delivery coupons.</p>
+      <form class="footer-newsletter-form" onsubmit="alert('Thank you for joining the RSC VIP Club! Check your inbox shortly.'); return false;">
+        <input type="email" class="footer-newsletter-input" placeholder="Enter your email..." required>
+        <button type="submit" class="btn btn-primary" style="padding: 1rem 1.6rem; font-size: 1.3rem;">Join</button>
       </form>
+      <div class="footer-payment-badges">
+        <span class="payment-badge">bKash</span>
+        <span class="payment-badge">Nagad</span>
+        <span class="payment-badge">Rocket</span>
+        <span class="payment-badge">COD</span>
+        <span class="payment-badge">Visa</span>
+        <span class="payment-badge">Mastercard</span>
+      </div>
     </div>
   </div>
 
-  <div class="container" style="border-top: 1px solid #222; padding-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; color: #777; font-size: 1.3rem;">
-    <div>&copy; 2026 Regards Sports Club. All Rights Reserved. Powered by Shopify.</div>
-    <div style="display: flex; gap: 1rem;">
-      <span style="background: #222; padding: 0.4rem 0.8rem; border-radius: 4px; color: #fff;">bKash</span>
-      <span style="background: #222; padding: 0.4rem 0.8rem; border-radius: 4px; color: #fff;">Nagad</span>
-      <span style="background: #222; padding: 0.4rem 0.8rem; border-radius: 4px; color: #fff;">COD</span>
-      <span style="background: #222; padding: 0.4rem 0.8rem; border-radius: 4px; color: #fff;">Visa/Mastercard</span>
+  <div class="container footer-bottom">
+    <div>&copy; {{ 'now' | date: '%Y' }} Regards Sports Club Ltd. All Rights Reserved. Built with Scandinavian Minimalism & High-Octane Sports Passion.</div>
+    <div class="footer-payment-badges">
+      <span class="payment-badge">🔒 256-Bit SSL Encrypted Checkout</span>
     </div>
   </div>
 </footer>

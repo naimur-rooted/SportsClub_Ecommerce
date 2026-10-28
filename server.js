@@ -444,14 +444,14 @@ function getFooterHtml() {
   return `
   <footer class="site-footer">
     <div class="container site-footer__grid">
-      <div>
+      <div class="site-footer__brand">
         <div style="margin-bottom: 1.8rem;">
           <a href="/"><img src="/assets/logo-white.svg" alt="Regards Sports Club" style="height: 44px; width: auto; max-width: 220px;"></a>
         </div>
-        <p style="color: #999; font-size: 1.4rem; max-width: 320px; margin-bottom: 2rem;">
+        <p>
           Bangladesh's premier omnichannel D2C sports destination for Thailand-imported kits, player editions, turf shoes, and custom line-item jersey printing.
         </p>
-        <p style="color: #aaa; font-size: 1.3rem;">
+        <p class="site-footer__meta">
           🏛️ <strong>Trade License:</strong> TRAD/DSCC/002648/2025<br>
           📍 <strong>Showroom:</strong> House 48, Road 03, Block E, Banasree, Rampura, Dhaka
         </p>
@@ -481,10 +481,30 @@ function getFooterHtml() {
           <a href="https://wa.me/8801754724991" target="_blank" style="color: var(--color-success); font-weight: 700;">WhatsApp Hotline: +880 1754-724991</a>
         </div>
       </div>
+
+      <div class="footer-newsletter">
+        <h4 class="footer-title">VIP Drop Alerts</h4>
+        <p>Subscribe for secret midnight drops, retro restocks, and exclusive Bangladesh delivery coupons.</p>
+        <form class="footer-newsletter-form" onsubmit="alert('Thank you for joining the RSC VIP Club! Check your inbox shortly.'); return false;">
+          <input type="email" class="footer-newsletter-input" placeholder="Enter your email..." required>
+          <button type="submit" class="btn btn-primary" style="padding: 1rem 1.6rem; font-size: 1.3rem;">Join</button>
+        </form>
+        <div class="footer-payment-badges">
+          <span class="payment-badge">bKash</span>
+          <span class="payment-badge">Nagad</span>
+          <span class="payment-badge">Rocket</span>
+          <span class="payment-badge">COD</span>
+          <span class="payment-badge">Visa</span>
+          <span class="payment-badge">Mastercard</span>
+        </div>
+      </div>
     </div>
 
     <div class="container footer-bottom">
       <div>&copy; ${new Date().getFullYear()} Regards Sports Club Ltd. All Rights Reserved. Built with Scandinavian Minimalism & High-Octane Sports Passion.</div>
+      <div class="footer-payment-badges">
+        <span class="payment-badge">🔒 256-Bit SSL Encrypted Checkout</span>
+      </div>
     </div>
   </footer>
   `;
@@ -752,7 +772,7 @@ app.get('/products/:handle', (req, res) => {
           <span style="color: var(--color-text-main); font-weight: 600;">${prod.title}</span>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 5rem;">
+        <div class="pdp-grid">
           <!-- Left Column: Multi-Angle Media Gallery with Hover Zoom Magnifier -->
           <div class="pdp-gallery">
             <!-- Main Interactive Zoom Stage -->
