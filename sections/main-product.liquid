@@ -1,0 +1,215 @@
+<section class="section-padding">
+  <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 5rem;">
+    <!-- Media Gallery with Interactive Hover Zoom Magnifier -->
+    <div class="pdp-gallery">
+      <div class="pdp-zoom-stage" id="zoom-stage">
+        <span class="pdp-zoom-badge" id="zoom-badge">{{ product.type | default: 'PLAYER EDITION' }}</span>
+        {% if product.featured_media %}
+          <img id="main-product-image" src="{{ product.featured_media | image_url: width: 1200 }}" alt="{{ product.title | escape }}">
+        {% else %}
+          <img id="main-product-image" src="{{ 'products/argentinaPlayr.jpeg' | asset_url }}" alt="{{ product.title | escape }}">
+        {% endif %}
+        <div class="pdp-zoom-hint" id="zoom-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          <span>Hover to Zoom (Drag to Pan)</span>
+        </div>
+
+        <!-- Prev/Next Angle Navigation Buttons -->
+        <button type="button" class="pdp-nav-arrow pdp-nav-arrow--prev" id="prev-angle-btn" aria-label="Previous Angle">&#10094;</button>
+        <button type="button" class="pdp-nav-arrow pdp-nav-arrow--next" id="next-angle-btn" aria-label="Next Angle">&#10095;</button>
+      </div>
+
+      <!-- Multi-Angle Thumbnail Strip -->
+      <div class="pdp-thumbnails" id="pdp-thumbnail-strip">
+        {% for media in product.media %}
+          <button type="button" class="pdp-thumb-btn {% if forloop.first %}is-active{% endif %}" data-image-url="{{ media | image_url: width: 1200 }}" data-index="{{ forloop.index }}" aria-label="Angle {{ forloop.index }}">
+            <img src="{{ media | image_url: width: 200 }}" alt="{{ product.title | escape }} angle {{ forloop.index }}">
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Purchase Options -->
+    <div>
+      <span style="font-size: 1.25rem; font-weight: 600; text-transform: uppercase; color: var(--color-primary); letter-spacing: 0.08em;">
+        {{ product.vendor | default: 'Regards Sports Club' }}
+      </span>
+      <h1 style="font-size: 3.2rem; margin: 0.5rem 0 1rem;">{{ product.title }}</h1>
+
+      <div style="font-size: 2.4rem; font-weight: 700; color: var(--color-dark); margin-bottom: 2rem;">
+        Tk {{ product.price | money_without_currency }}
+        {% if product.compare_at_price > product.price %}
+          <span style="font-size: 1.8rem; text-decoration: line-through; color: #888; margin-left: 1rem;">
+            Tk {{ product.compare_at_price | money_without_currency }}
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Main Form -->
+      <form method="post" action="/cart/add" data-ajax-cart-form id="main-product-form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+        <!-- Sizing Selector (Pill Buttons) -->
+        <div style="margin-bottom: 2rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <label style="font-weight: 700; font-size: 1.4rem;">Select Size: <span data-selected-label="size" style="color: var(--color-primary);">M</span></label>
+            <a href="#size-chart" onclick="alert('Viewing Size Chart:\nM: 38-40in\nL: 40-42in\nXL: 42-44in\n2XL: 44-46in'); return false;" style="font-size: 1.3rem; text-decoration: underline; color: #444;">Size Guide</a>
+          </div>
+          <div class="variant-pills">
+            <div class="variant-pill">
+              <input type="radio" id="size-m" name="size" value="M" checked>
+              <label for="size-m">M</label>
+            </div>
+            <div class="variant-pill">
+              <input type="radio" id="size-l" name="size" value="L">
+              <label for="size-l">L</label>
+            </div>
+            <div class="variant-pill">
+              <input type="radio" id="size-xl" name="size" value="XL">
+              <label for="size-xl">XL</label>
+            </div>
+            <div class="variant-pill">
+              <input type="radio" id="size-2xl" name="size" value="2XL">
+              <label for="size-2xl">2XL</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Line-Item Property Personalization -->
+        <div class="personalization-box">
+          <div class="personalization-box__label">
+            <span>⚡ Personalize Your Jersey</span>
+            <span class="personalization-box__tag">+Tk 250</span>
+          </div>
+          <input
+            type="text"
+            name="properties[Personalize Your Jersey (+Tk 250)]"
+            class="personalization-input"
+            data-personalize-input
+            placeholder="Enter Name & Number (e.g. MESSI 10)"
+          >
+          <small style="display: block; margin-top: 0.6rem; color: #666; font-size: 1.2rem;">
+            Official league font hot-pressed print. Hand wash recommended.
+          </small>
+        </div>
+
+        <!-- Add To Cart & Buy Now Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <button type="submit" class="btn btn-primary btn-block" id="main-atc-button" style="padding: 1.6rem; font-size: 1.5rem;">
+            Add to Kit Bag
+          </button>
+          
+          {% render 'whatsapp-order-button', product: product %}
+        </div>
+      </form>
+
+      <!-- Informational Accordions -->
+      <div style="margin-top: 4rem;">
+        <div class="accordion-item">
+          <details open>
+            <summary class="accordion-summary">Product Specifications <span>-</span></summary>
+            <div class="accordion-content">
+              • High-grade Thailand-imported fabric.<br>
+              • Heat-pressed crest and sponsor vinyl or high-density embroidery.<br>
+              • AeroReady/Dri-Fit moisture absorbing mesh.<br>
+              • Athlete slim match-day cut.
+            </div>
+          </details>
+        </div>
+
+        <div class="accordion-item">
+          <details>
+            <summary class="accordion-summary">Washing & Care Instructions <span>+</span></summary>
+            <div class="accordion-content">
+              • Machine wash cold or gentle hand wash.<br>
+              • Do not bleach or tumble dry.<br>
+              • Iron inside out (never place direct heat on printed names/numbers).
+            </div>
+          </details>
+        </div>
+
+        <div class="accordion-item">
+          <details>
+            <summary class="accordion-summary">Shipping & Delivery Rates <span>+</span></summary>
+            <div class="accordion-content">
+              🚚 <strong>Dhaka City:</strong> ৳70 – ৳80 (1–2 days delivery, Full COD).<br>
+              🚚 <strong>Outside Dhaka:</strong> ৳120 (2–3 days delivery across all 64 districts).
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Persistent Sticky Mobile CTA -->
+<div class="sticky-atc-bar" id="sticky-atc-bar">
+  <div class="sticky-atc-bar__info">
+    <div class="sticky-atc-bar__title">{{ product.title }}</div>
+  </div>
+  <button type="button" class="btn btn-accent" onclick="document.getElementById('main-atc-button').click();" style="padding: 1rem 2rem; font-size: 1.3rem;">
+    Add to Bag • Tk {{ product.price | money_without_currency }}
+  </button>
+</div>
+
+<script>
+  (function() {
+    const zoomStage = document.getElementById('zoom-stage');
+    const mainImg = document.getElementById('main-product-image');
+    const zoomHint = document.getElementById('zoom-hint');
+    const thumbBtns = document.querySelectorAll('.pdp-thumb-btn');
+    const prevBtn = document.getElementById('prev-angle-btn');
+    const nextBtn = document.getElementById('next-angle-btn');
+
+    let currentIdx = 0;
+    const imgList = Array.from(thumbBtns).map(btn => btn.getAttribute('data-image-url'));
+
+    function switchAngle(index) {
+      if (index < 0) index = imgList.length - 1;
+      if (index >= imgList.length) index = 0;
+      currentIdx = index;
+
+      mainImg.src = imgList[currentIdx];
+
+      thumbBtns.forEach((btn, idx) => {
+        if (idx === currentIdx) {
+          btn.classList.add('is-active');
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          btn.classList.remove('is-active');
+        }
+      });
+
+      mainImg.style.transformOrigin = 'center center';
+      mainImg.style.transform = 'scale(1)';
+      if (zoomHint) zoomHint.style.opacity = '1';
+    }
+
+    thumbBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => switchAngle(idx));
+      btn.addEventListener('mouseenter', () => switchAngle(idx));
+    });
+
+    prevBtn?.addEventListener('click', () => switchAngle(currentIdx - 1));
+    nextBtn?.addEventListener('click', () => switchAngle(currentIdx + 1));
+
+    // Hover Zoom (2.2x Magnifier)
+    zoomStage?.addEventListener('mouseenter', () => {
+      if (zoomHint) zoomHint.style.opacity = '0';
+      mainImg.style.transform = 'scale(2.2)';
+    });
+
+    zoomStage?.addEventListener('mousemove', (e) => {
+      const rect = zoomStage.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      mainImg.style.transformOrigin = x + '% ' + y + '%';
+    });
+
+    zoomStage?.addEventListener('mouseleave', () => {
+      if (zoomHint) zoomHint.style.opacity = '1';
+      mainImg.style.transformOrigin = 'center center';
+      mainImg.style.transform = 'scale(1)';
+    });
+  })();
+</script>

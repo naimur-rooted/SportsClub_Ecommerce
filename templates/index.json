@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slideshow",
+      "settings": {}
+    },
+    "tab_showcase": {
+      "type": "ajax-tab-showcase",
+      "settings": {}
+    },
+    "marquee": {
+      "type": "scrolling-marquee",
+      "settings": {}
+    },
+    "value_props": {
+      "type": "value-props",
+      "settings": {}
+    },
+    "lookbook": {
+      "type": "shoppable-lookbook",
+      "settings": {}
+    },
+    "trust_anchors": {
+      "type": "trust-anchors",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "tab_showcase",
+    "marquee",
+    "value_props",
+    "lookbook",
+    "trust_anchors"
+  ]
+}

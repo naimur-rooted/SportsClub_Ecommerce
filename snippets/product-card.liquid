@@ -1,0 +1,80 @@
+{% comment %}
+  Renders a high-converting product card with badges, hover images & price in BDT.
+  Accepts:
+  - product: {Object} Product object
+  - show_badge: {Boolean}
+{% endcomment %}
+
+<div class="product-card" data-product-id="{{ product.id }}">
+  <div class="product-card__media">
+    <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
+      {% if product.featured_media %}
+        <img
+          src="{{ product.featured_media | image_url: width: 600 }}"
+          alt="{{ product.featured_media.alt | escape | default: product.title }}"
+          class="product-card__image product-card__image--primary"
+          loading="lazy"
+          width="600"
+          height="800"
+        >
+        {% if product.media[1] %}
+          <img
+            src="{{ product.media[1] | image_url: width: 600 }}"
+            alt="{{ product.title | escape }}"
+            class="product-card__image product-card__image--secondary"
+            loading="lazy"
+            width="600"
+            height="800"
+          >
+        {% endif %}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </a>
+
+    <!-- Promotional & Kit Badges -->
+    <div class="product-card__badges">
+      {% if product.compare_at_price > product.price %}
+        <span class="badge badge-sale">SALE</span>
+      {% endif %}
+      {% if product.tags contains 'Player Edition' or product.title contains 'Player' %}
+        <span class="badge badge-player">PLAYER EDITION</span>
+      {% elsif product.tags contains '2026/27' %}
+        <span class="badge badge-hot">2026/27 DROP</span>
+      {% elsif product.tags contains 'Retro' %}
+        <span class="badge badge-new">RETRO CLASSIC</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="product-card__content">
+    <span class="product-card__category">{{ product.type | default: 'Football Kit' }}</span>
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card__price">
+      <span class="price-current {% if product.compare_at_price > product.price %}has-sale{% endif %}">
+        Tk {{ product.price | money_without_currency }}
+      </span>
+      {% if product.compare_at_price > product.price %}
+        <span class="price-compare">
+          Tk {{ product.compare_at_price | money_without_currency }}
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- Quick Buy / View Option Button -->
+    <div style="margin-top: 1.2rem;">
+      {% if product.available %}
+        <a href="{{ product.url }}" class="btn btn-outline btn-block" style="padding: 1rem 1.4rem; font-size: 1.25rem;">
+          Select Options
+        </a>
+      {% else %}
+        <button class="btn btn-outline btn-block" disabled style="opacity: 0.6; padding: 1rem 1.4rem; font-size: 1.25rem;">
+          Sold Out
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="cart-drawer-overlay" id="cart-drawer-overlay"></div>
+
+<aside class="cart-drawer" id="cart-drawer" aria-label="Shopping Cart">
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">Your Kit Bag (<span id="cart-drawer-count">{{ cart.item_count | default: 0 }}</span>)</h2>
+    <button type="button" class="cart-drawer__close" id="cart-drawer-close" aria-label="Close cart">&times;</button>
+  </div>
+
+  <!-- Dynamic Free Shipping Threshold Bar -->
+  <div class="cart-drawer__free-shipping">
+    <div class="free-shipping__text" id="free-shipping-text">
+      Add more to reach <strong>FREE SHIPPING</strong>!
+    </div>
+    <div class="free-shipping__progress-bar">
+      <div class="free-shipping__fill" id="free-shipping-fill"></div>
+    </div>
+  </div>
+
+  <!-- Scrollable Cart Items -->
+  <div class="cart-drawer__items" id="cart-drawer-items">
+    <!-- Populated by ImranTheme.renderCart() in theme.js -->
+  </div>
+
+  <!-- Cart Drawer Footer -->
+  <div class="cart-drawer__footer">
+    <!-- Order Notes for Custom Printing & Delivery Instructions -->
+    <details style="margin-bottom: 1.2rem;">
+      <summary style="font-weight: 600; font-size: 1.3rem; cursor: pointer;">+ Add Special Printing or Delivery Instructions</summary>
+      <textarea name="note" class="personalization-input" style="height: 60px; margin-top: 0.8rem;" placeholder="e.g. Call before delivery, print MESSI 10 on kit...">{{ cart.note }}</textarea>
+    </details>
+
+    <div class="cart-drawer__subtotal">
+      <span>Subtotal</span>
+      <span id="cart-drawer-subtotal">Tk {{ cart.total_price | money_without_currency | default: '0.00' }}</span>
+    </div>
+
+    <p style="font-size: 1.2rem; color: #666; margin-bottom: 1.4rem;">
+      Taxes and shipping calculated at checkout. Cash on delivery available.
+    </p>
+
+    <a href="/checkout" class="btn btn-accent btn-block" style="padding: 1.6rem; font-size: 1.5rem;">
+      Proceed to Checkout &rarr;
+    </a>
+  </div>
+</aside>

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Regards Sports Club Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Regards Sports Club Developer Team",
+    "theme_documentation_url": "https://github.com/",
+    "theme_support_url": "https://imransports.com/support"
+  },
+  {
+    "name": "Brand Colors & Tokens",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary Accent (Crimson Red)",
+        "default": "#D63A2F"
+      },
+      {
+        "type": "color",
+        "id": "color_dark",
+        "label": "Primary Dark",
+        "default": "#000000"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp Hotline Number",
+        "default": "8801754724991"
+      }
+    ]
+  }
+]

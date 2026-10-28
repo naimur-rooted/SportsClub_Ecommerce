@@ -1,0 +1,140 @@
+<!-- Announcement Bar -->
+<div class="announcement-bar">
+  <div class="container announcement-bar__ticker">
+    ⚡ <strong>WORLD CUP 2026 & 2026/27 KITS LIVE!</strong> Enjoy Free Nationwide Delivery on Orders Over Tk 2,000 | Cash on Delivery Available
+  </div>
+  <div class="announcement-bar__links container" style="max-width: fit-content; display: none;">
+    <span>Hotline: +880 1754-724991</span>
+  </div>
+</div>
+
+<!-- Main Sticky Header -->
+<header class="site-header" id="site-header">
+  <div class="container site-header__inner">
+    <!-- Mobile Hamburger Trigger -->
+    <button type="button" class="header-icon-btn mobile-nav-trigger" id="mobile-menu-open" aria-label="Open Navigation">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Brand Logo -->
+    <a href="/" class="site-logo" style="display: flex; align-items: center; gap: 0.8rem; text-decoration: none;">
+      <img src="{{ 'logo.svg' | asset_url }}" alt="Regards Sports Club" style="height: 44px; width: auto; max-width: 220px;" onerror="this.style.display='none'; document.getElementById('site-logo-fallback').style.display='inline-block';">
+      <span id="site-logo-fallback" style="display: none;">REGARDS SPORTS <span>CLUB</span></span>
+    </a>
+
+    <!-- Desktop Navigation with Hover Dropdown -->
+    <nav class="site-nav">
+      <div class="site-nav__item">
+        <a href="/" class="site-nav__link is-active">HOME</a>
+      </div>
+      
+      <div class="site-nav__item">
+        <a href="/collections/2026-27-player-edition" class="site-nav__link">CLUB JERSEY 26–27</a>
+      </div>
+
+      <!-- JERSEY Dropdown -->
+      <div class="site-nav__item site-nav__item--dropdown">
+        <a href="/collections/all" class="site-nav__link site-nav__link-dropdown-trigger">
+          JERSEY
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </a>
+        <div class="site-nav__dropdown">
+          <a href="/collections/club-jersey" class="site-nav__dropdown-link">Club Jersey</a>
+          <a href="/collections/world-cup-2026" class="site-nav__dropdown-link">World Cup 2026</a>
+          <a href="/collections/national-jersey" class="site-nav__dropdown-link">National Jersey</a>
+          <a href="/collections/retro-jersey" class="site-nav__dropdown-link">Retro Jersey</a>
+          <a href="/collections/kids-jersey" class="site-nav__dropdown-link">Kids Jersey</a>
+          <a href="/collections/player-edition" class="site-nav__dropdown-link">Player Edition</a>
+          <a href="/collections/fan-edition" class="site-nav__dropdown-link">Fan Edition</a>
+        </div>
+      </div>
+
+      <div class="site-nav__item">
+        <a href="/collections/trousers-shorts" class="site-nav__link">TROUSER</a>
+      </div>
+
+      <div class="site-nav__item">
+        <a href="/collections/turf-shoes" class="site-nav__link">TURF SHOES</a>
+      </div>
+
+      <div class="site-nav__item">
+        <a href="/collections/accessories" class="site-nav__link">ACCESSORIES</a>
+      </div>
+    </nav>
+
+    <!-- Header Actions (Search, Account, Cart) -->
+    <div class="site-header__actions">
+      <!-- Search Trigger -->
+      <button type="button" class="header-icon-btn" id="search-drawer-open" aria-label="Search Catalog">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+
+      <!-- Cart Drawer Trigger -->
+      <button type="button" class="header-icon-btn" data-cart-trigger aria-label="Open Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="cart-count-badge" id="cart-count-badge">{{ cart.item_count | default: 0 }}</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-nav-drawer" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99999; display: none;">
+  <div style="width: 80%; max-width: 320px; height: 100%; background: #fff; padding: 2.5rem 2rem; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+      <a href="/" style="display: inline-block;">
+        <img src="{{ 'logo.svg' | asset_url }}" alt="Regards Sports Club" style="height: 38px; width: auto;" onerror="this.style.display='none'; document.getElementById('mobile-logo-fallback').style.display='inline-block';">
+        <span id="mobile-logo-fallback" class="site-logo" style="display: none; font-size: 2rem;">REGARDS <span>SPORTS CLUB</span></span>
+      </a>
+      <button id="mobile-menu-close" style="background: none; border: none; font-size: 2.4rem; cursor: pointer;">&times;</button>
+    </div>
+    <nav style="display: flex; flex-direction: column; gap: 1.4rem; font-size: 1.5rem; font-weight: 600;">
+      <a href="/" style="text-transform: uppercase;">HOME</a>
+      <a href="/collections/2026-27-player-edition" style="color: var(--color-primary); text-transform: uppercase;">🔥 CLUB JERSEY 26–27</a>
+      <details style="border-bottom: 1px solid #eee; padding-bottom: 0.8rem;">
+        <summary style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase;">
+          JERSEY <span style="font-size: 1.2rem;">▼</span>
+        </summary>
+        <div style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem 0 0.5rem 1rem; font-size: 1.4rem; font-weight: 500;">
+          <a href="/collections/club-jersey" style="color: #444;">Club Jersey</a>
+          <a href="/collections/world-cup-2026" style="color: #444;">World Cup 2026</a>
+          <a href="/collections/national-jersey" style="color: #444;">National Jersey</a>
+          <a href="/collections/retro-jersey" style="color: #444;">Retro Jersey</a>
+          <a href="/collections/kids-jersey" style="color: #444;">Kids Jersey</a>
+          <a href="/collections/player-edition" style="color: #444;">Player Edition</a>
+          <a href="/collections/fan-edition" style="color: #444;">Fan Edition</a>
+        </div>
+      </details>
+      <a href="/collections/trousers-shorts" style="text-transform: uppercase;">TROUSER</a>
+      <a href="/collections/turf-shoes" style="text-transform: uppercase;">TURF SHOES</a>
+      <a href="/collections/accessories" style="text-transform: uppercase;">ACCESSORIES</a>
+      <a href="/pages/contact" style="text-transform: uppercase;">SHOWROOM & CONTACT</a>
+    </nav>
+    <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #eee; font-size: 1.3rem; color: #666;">
+      <p>📞 Hotline: +880 1754-724991</p>
+      <p>📍 Banasree, Rampura, Dhaka</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('mobile-menu-open')?.addEventListener('click', () => {
+    document.getElementById('mobile-nav-drawer').style.display = 'block';
+  });
+  document.getElementById('mobile-menu-close')?.addEventListener('click', () => {
+    document.getElementById('mobile-nav-drawer').style.display = 'none';
+  });
+</script>

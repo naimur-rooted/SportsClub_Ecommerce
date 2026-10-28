@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 80" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGradW" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1E1E"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="redGradW" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#D63A2F"/>
+    </linearGradient>
+    <linearGradient id="goldGradW" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+
+  <!-- SHIELD EMBLEM GROUP (Left) -->
+  <g transform="translate(10, 5)">
+    <path d="M 35 2 
+             C 56 2, 68 8, 68 8 
+             L 68 38 
+             C 68 56, 48 66, 35 70 
+             C 22 66, 2 56, 2 38 
+             L 2 8 
+             C 2 8, 14 2, 35 2 Z" 
+          fill="url(#shieldGradW)" 
+          stroke="url(#goldGradW)" 
+          stroke-width="2"/>
+
+    <path d="M 35 6 
+             C 52 6, 63 11, 63 11 
+             L 63 36 
+             C 63 52, 46 61, 35 65 
+             C 24 61, 7 52, 7 36 
+             L 7 11 
+             C 7 11, 18 6, 35 6 Z" 
+          fill="none" 
+          stroke="rgba(255,255,255,0.25)" 
+          stroke-width="1.2"/>
+
+    <path d="M 2 24 L 20 8 L 68 40 L 68 54 L 52 64 Z" 
+          fill="url(#redGradW)" 
+          opacity="0.95"/>
+
+    <rect x="22" y="18" width="6.5" height="34" rx="1.5" fill="#FFFFFF"/>
+    <path d="M 28 18 L 41 18 C 47 18, 51 21.5, 51 27 C 51 32.5, 47 36, 41 36 L 28 36 Z" fill="#FFFFFF"/>
+    <path d="M 28.5 23 L 39.5 23 C 43 23, 45 24.5, 45 27 C 45 29.5, 43 31, 39.5 31 L 28.5 31 Z" fill="#111111"/>
+    <path d="M 36 34 L 49 52 L 41 52 L 30 36 Z" fill="#FFFFFF"/>
+
+    <path d="M 35 9 L 36.5 12 L 40 12.5 L 37.5 14.5 L 38.2 18 L 35 16 L 31.8 18 L 32.5 14.5 L 30 12.5 L 33.5 12 Z" fill="url(#goldGradW)" transform="scale(0.5) translate(35, -4)"/>
+    <path d="M 24 12 L 25.2 14.2 L 28 14.6 L 26 16.2 L 26.6 19 L 24 17.5 L 21.4 19 L 22 16.2 L 20 14.6 L 22.8 14.2 Z" fill="url(#goldGradW)" transform="scale(0.4) translate(18, 6)"/>
+    <path d="M 46 12 L 47.2 14.2 L 50 14.6 L 48 16.2 L 48.6 19 L 46 17.5 L 43.4 19 L 44 16.2 L 42 14.6 L 44.8 14.2 Z" fill="url(#goldGradW)" transform="scale(0.4) translate(70, 6)"/>
+  </g>
+
+  <!-- BRAND TYPOGRAPHY GROUP (Right) -->
+  <g transform="translate(95, 12)">
+    <text x="0" y="32" 
+          font-family="'Fraunces', 'DM Sans', -apple-system, serif" 
+          font-size="31" 
+          font-weight="800" 
+          fill="#FFFFFF" 
+          letter-spacing="0.04em">REGARDS</text>
+    
+    <text x="1" y="52" 
+          font-family="'DM Sans', -apple-system, sans-serif" 
+          font-size="13" 
+          font-weight="700" 
+          fill="#EF4444" 
+          letter-spacing="0.22em">SPORTS CLUB</text>
+
+    <circle cx="162" cy="48" r="2.2" fill="#D4AF37"/>
+    <text x="172" y="52" 
+          font-family="'DM Sans', -apple-system, sans-serif" 
+          font-size="10.5" 
+          font-weight="600" 
+          fill="#AAAAAA" 
+          letter-spacing="0.16em">DHAKA</text>
+  </g>
+</svg>

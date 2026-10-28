@@ -1,0 +1,137 @@
+<section class="section-padding" style="background-color: var(--color-bg-white);">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <span style="color: var(--color-primary); font-weight: 700; text-transform: uppercase; font-size: 1.3rem; letter-spacing: 0.1em;">
+        Curated Drops
+      </span>
+      <h2 style="margin-top: 0.5rem;">What's New in The World</h2>
+      <p style="color: var(--color-text-muted); font-size: 1.6rem;">Switch categories instantly without reloading</p>
+    </div>
+
+    <!-- AJAX Tab Navigation -->
+    <div class="tab-navigation">
+      <button type="button" class="tab-btn is-active" data-tab-target="tab-all">All Products</button>
+      <button type="button" class="tab-btn" data-tab-target="tab-jerseys">Jerseys (26/27)</button>
+      <button type="button" class="tab-btn" data-tab-target="tab-trousers">Trousers & Shorts</button>
+      <button type="button" class="tab-btn" data-tab-target="tab-turf">Turf Shoes</button>
+      <button type="button" class="tab-btn" data-tab-target="tab-accessories">Accessories</button>
+    </div>
+
+    <!-- Tab Panes -->
+    <div class="tab-content">
+      <!-- 1. All Products Tab -->
+      <div class="tab-pane is-active" id="tab-all">
+        {% for product in collections['frontpage'].products limit: 8 %}
+          {% render 'product-card', product: product %}
+        {% else %}
+          <!-- Mock Fallback Display for Instant Preview -->
+          <div class="product-card">
+            <div class="product-card__media">
+          <!-- Real Product Cards from Pictures/all -->
+          <div class="product-card">
+            <div class="product-card__media">
+              <span class="badge badge-player" style="position: absolute; top: 1rem; left: 1rem; z-index: 2;">PLAYER EDITION</span>
+              <a href="/products/argentina-home-2026-world-cup-player">
+                <img src="{{ 'products/argentinaPlayr.jpeg' | asset_url }}" class="product-card__image" alt="Argentina Player Edition">
+              </a>
+            </div>
+            <div class="product-card__content">
+              <span class="product-card__category">National Jersey • World Cup 2026</span>
+              <h3 class="product-card__title"><a href="/products/argentina-home-2026-world-cup-player">Argentina Home 2026 World Cup Player Edition</a></h3>
+              <div class="product-card__price"><span class="price-current">Tk 1,150</span> <span class="price-compare">Tk 1,350</span></div>
+              <a href="/products/argentina-home-2026-world-cup-player" class="btn btn-outline btn-block" style="margin-top: 1rem;">Select Size & Order</a>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card__media">
+              <span class="badge badge-hot" style="position: absolute; top: 1rem; left: 1rem; z-index: 2;">WORLD CUP</span>
+              <a href="/products/brazil-home-2026-world-cup-jersey">
+                <img src="{{ 'products/brazilHomeWorldcupJersey.jpeg' | asset_url }}" class="product-card__image" alt="Brazil Home 2026 World Cup">
+              </a>
+            </div>
+            <div class="product-card__content">
+              <span class="product-card__category">National Jersey • Fan Edition</span>
+              <h3 class="product-card__title"><a href="/products/brazil-home-2026-world-cup-jersey">Brazil Home 2026 World Cup Jersey</a></h3>
+              <div class="product-card__price"><span class="price-current has-sale">Tk 1,150</span> <span class="price-compare">Tk 1,350</span></div>
+              <a href="/products/brazil-home-2026-world-cup-jersey" class="btn btn-outline btn-block" style="margin-top: 1rem;">Select Size & Order</a>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card__media">
+              <span class="badge badge-player" style="position: absolute; top: 1rem; left: 1rem; z-index: 2;">PLAYER EDITION</span>
+              <a href="/products/italy-2026-world-cup-training-kit">
+                <img src="{{ 'products/Italy 2026 World Cup Traning Kit Player Edition.jpeg' | asset_url }}" class="product-card__image" alt="Italy 2026 Training Kit">
+              </a>
+            </div>
+            <div class="product-card__content">
+              <span class="product-card__category">Training Kit • Player Edition</span>
+              <h3 class="product-card__title"><a href="/products/italy-2026-world-cup-training-kit">Italy 2026 World Cup Training Kit Player Edition</a></h3>
+              <div class="product-card__price"><span class="price-current">Tk 1,150</span> <span class="price-compare">Tk 1,350</span></div>
+              <a href="/products/italy-2026-world-cup-training-kit" class="btn btn-outline btn-block" style="margin-top: 1rem;">Select Size & Order</a>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card__media">
+              <span class="badge badge-hot" style="position: absolute; top: 1rem; left: 1rem; z-index: 2;">WORLD CUP</span>
+              <a href="/products/portugal-fifa-world-cup-jersey-2026">
+                <img src="{{ 'products/Portugal-FIFA-World-Cup-Jersey-2026-667x800.jpeg' | asset_url }}" class="product-card__image" alt="Portugal 2026 World Cup">
+              </a>
+            </div>
+            <div class="product-card__content">
+              <span class="product-card__category">National Jersey • Fan Edition</span>
+              <h3 class="product-card__title"><a href="/products/portugal-fifa-world-cup-jersey-2026">Portugal FIFA World Cup Jersey 2026</a></h3>
+              <div class="product-card__price"><span class="price-current">Tk 1,150</span> <span class="price-compare">Tk 1,350</span></div>
+              <a href="/products/portugal-fifa-world-cup-jersey-2026" class="btn btn-outline btn-block" style="margin-top: 1rem;">Select Size & Order</a>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card__media">
+              <span class="badge badge-new" style="position: absolute; top: 1rem; left: 1rem; z-index: 2;">RETRO CLASSIC</span>
+              <a href="/products/real-madrid-2012-13-classic-retro-kit">
+                <img src="{{ 'products/Real Madrid 2012-13 Classic Retro Kit.jpg' | asset_url }}" class="product-card__image" alt="Real Madrid 2012-13 Retro Kit">
+              </a>
+            </div>
+            <div class="product-card__content">
+              <span class="product-card__category">Retro Jersey • Club Kit</span>
+              <h3 class="product-card__title"><a href="/products/real-madrid-2012-13-classic-retro-kit">Real Madrid 2012-13 Classic Retro Kit</a></h3>
+              <div class="product-card__price"><span class="price-current">Tk 1,200</span> <span class="price-compare">Tk 1,400</span></div>
+              <a href="/products/real-madrid-2012-13-classic-retro-kit" class="btn btn-outline btn-block" style="margin-top: 1rem;">Select Size & Order</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- 2. Jerseys Tab -->
+      <div class="tab-pane" id="tab-jerseys">
+        {% for product in collections['club-jerseys'].products limit: 4 %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+
+      <!-- 3. Trousers Tab -->
+      <div class="tab-pane" id="tab-trousers">
+        {% for product in collections['trousers-shorts'].products limit: 4 %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+
+      <!-- 4. Turf Shoes Tab -->
+      <div class="tab-pane" id="tab-turf">
+        {% for product in collections['turf-shoes'].products limit: 4 %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+
+      <!-- 5. Accessories Tab -->
+      <div class="tab-pane" id="tab-accessories">
+        {% for product in collections['accessories'].products limit: 4 %}
+          {% render 'product-card', product: product %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
