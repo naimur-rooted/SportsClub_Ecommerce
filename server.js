@@ -1271,11 +1271,15 @@ app.get('/pages/contact', (req, res) => {
   res.send(html);
 });
 
-// START SERVER
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 REGARDS SPORTS CLUB STOREFRONT IS LIVE ON LOCALHOST!`);
-  console.log(`📡 URL: http://localhost:${PORT}`);
-  console.log(`⚡ 41 Categorized Products Active with Multi-Angle Zoom!`);
-  console.log(`=======================================================`);
-});
+// START SERVER (Localhost or Vercel Serverless)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 REGARDS SPORTS CLUB STOREFRONT IS LIVE ON LOCALHOST!`);
+    console.log(`📡 URL: http://localhost:${PORT}`);
+    console.log(`⚡ 41 Categorized Products Active with Multi-Angle Zoom!`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
