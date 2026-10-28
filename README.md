@@ -1,71 +1,71 @@
-# Regards Sports Club (RSC) — Modern D2C Sports E-Commerce Platform
+# Regards Sports Club (RSC) — D2C Sports E-Commerce Platform
 
+[![Project Type](https://img.shields.io/badge/Project-Public%20Demo%20%7C%20Portfolio%20Showcase-purple.svg)](#about-this-showcase)
 [![Platform](https://img.shields.io/badge/Platform-Shopify%20OS%202.0-green.svg)](https://shopify.dev)
-[![Node.js](https://img.shields.io/badge/Local%20Engine-Node.js%20%7C%20Express-blue.svg)](https://nodejs.org)
-[![Design](https://img.shields.io/badge/Design%20System-Scandinavian%20Minimalism-crimson.svg)](#design-system)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-success.svg)](#features)
+[![Local Engine](https://img.shields.io/badge/Local%20Engine-Node.js%20%7C%20Express-blue.svg)](https://nodejs.org)
+[![Design](https://img.shields.io/badge/Design-Scandinavian%20Minimalism-crimson.svg)](#design-system)
+[![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](#license)
 
-A mobile-first, omnichannel D2C sportswear and football fan apparel e-commerce storefront specializing in Thailand-imported player-edition kits, club jerseys, classic retro kits, training trousers, turf shoes, and custom line-item jersey printing.
+> 💡 **Portfolio Showcase Notice:** This is an open **public demonstration project** built to showcase advanced Shopify OS 2.0 theme engineering, modern D2C conversion UX, multi-angle product photography galleries with hover zoom lenses, and dynamic line-item customization.
 
 ---
 
-## ⚡ Key Highlights & Features
+## ⚡ Key Architecture & Engineering Features
 
-* **Complete Multi-Category Catalog (41+ Products):**
+* **Multi-Category Catalog (41+ Structured Products):**
   * `Club Jersey 26–27` (Real Madrid, Barcelona, Arsenal, Man City, Bayern Munich, Celtic, AC Milan)
   * `World Cup 2026` (Argentina Messi Special Edition, Brazil, England, Portugal, Spain, Germany)
-  * `National Team Jerseys`
-  * `Iconic Classic Retro Kits` (1998, 2002, 2006, 2008, 2010, 2012)
-  * `Kids & Junior Full Kits` (Jersey + Matching Shorts)
-  * `Player Edition` (Aerodynamic match-issue cut, heat-pressed crests, laser ventilation)
-  * `Fan Edition` (Embroidered woven badges, relaxed daily fit)
-  * `Athletic Trousers & Training Shorts` (Ultra-stretch taper, zip pockets)
-  * `Turf & Indoor Football Shoes` (Multi-stud rubber traction, laceless collars, European sizing EU 40–45)
-  * `Training Accessories` (Anti-slip grip socks, FIFA quality match balls, goalkeeper gloves, pumps, captain armbands)
+  * `National Team Kits` (International Tournament Editions)
+  * `Classic Retro Collection` (1998, 2002, 2006, 2008, 2010, 2012)
+  * `Kids & Junior Full Sets` (Match-replica jersey + drawstring shorts)
+  * `Player vs. Fan Editions` (Match issue heat-press specs vs. woven stadium editions)
+  * `Training Trousers & Shorts` (Ultra-stretch athletic taper)
+  * `Turf & Indoor Football Boots` (Multi-stud traction with European sizing EU 40–45)
+  * `Pro Gear & Accessories` (Anti-slip grip socks, FIFA quality balls, goalkeeper gloves)
 
-* **Interactive Multi-Angle Gallery & Hover Zoom:**
-  * **2 to 24 High-Resolution Angles Per Product:** Front, back, collar, badge close-up, and packaging.
-  * **Interactive 2.2× Hover Magnifier:** Cursor-coordinate tracking lens allows customers to inspect stitching, embroidery, and fabric texture in close detail.
-  * **Scrollable Thumbnail Strip & Stepper Arrows:** Smooth thumbnail switching with active indicator pill.
+* **Interactive Multi-Angle Gallery with 2.2× Hover Zoom:**
+  * **2 to 24 High-Resolution Angles Per Item:** Front, back, collar, fabric close-up, and tags.
+  * **Coordinate-Tracking Magnifier Lens:** Real-time mouse position tracking provides optical zoom on desktop without UI lag.
+  * **Smooth Carousel & Thumbnail Stepper:** Switch angles via thumbnail click/hover or left/right stepper controls.
 
-* **Line-Item Jersey Personalization Engine:**
-  * Custom name and squad number printing inputs with automated `+Tk 250` upcharge calculation.
-  * Official league font styling guidelines with wash-care instructions.
+* **Custom Line-Item Jersey Personalization:**
+  * Line-item property text inputs for player name & squad number with automated upcharge calculation (`+Tk 250`).
+  * Seamless validation preventing checkout leakage.
 
-* **AJAX Slide-Out Cart Drawer & Predictive Live Search:**
-  * Dynamic slide-out cart drawer with real-time subtotal calculation, free shipping threshold meter, and line-item property display.
-  * Live predictive search modal with debounced query suggestions across titles, tags, and categories.
+* **Slide-Out AJAX Cart Drawer & Live Predictive Search:**
+  * Slide-out cart drawer with free shipping progress bar and real-time recalculation.
+  * Debounced predictive live search suggestion modal with instant product matches.
 
-* **Shopify OS 2.0 Theme Architecture:**
-  * Modular Liquid sections (`sections/`, `snippets/`, `layout/`, `templates/json`).
-  * Ready-to-deploy zip theme package: `regards-sports-club-theme.zip`.
+* **Shopify OS 2.0 Theme Structure:**
+  * Clean modular architecture (`sections/`, `snippets/`, `layout/`, `templates/json`).
+  * Ready-to-deploy zip bundle: `regards-sports-club-theme.zip`.
 
 ---
 
 ## 🎨 Design System & UI Tokens
 
 * **Typography:**
-  * Headings & Editorial Titles: `Fraunces` (Google Serif)
-  * UI, Menus, Buttons & Body: `DM Sans` (400, 500, 700 with `0.05em` letter-spacing)
+  * Editorial & Promotional Headings: `Fraunces` (Google Serif)
+  * UI Elements, Menus, Buttons & Body: `DM Sans` (400, 500, 700 with `0.05em` letter-spacing)
 * **Color Palette:**
   * Primary Accent: Vibrant Crimson Red (`#D63A2F`)
   * Backgrounds: Crisp White (`#FFFFFF`) & Warm Scandinavian Sand (`#F3F0EC`)
-  * Dark & Accents: Obsidian Black (`#0A0A0A`) & Metallic Champagne Gold (`#D4AF37`)
-* **Layout:** Max container width `1410px`, button border-radius `0.5rem`, product card radius `1.0rem`.
+  * Contrast & Badges: Obsidian Black (`#0A0A0A`) & Metallic Champagne Gold (`#D4AF37`)
+* **Layout Tokens:** Max container width `1410px`, button radius `0.5rem`, product card radius `1.0rem`.
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-RegardsSportsClub/
+SportsClub_Ecommerce/
 ├── assets/                       # CSS, JS, Brand SVGs, PNGs, and Product Media
 │   ├── logo.svg                  # Primary vector brand logo
 │   ├── logo-white.svg            # Dark mode / footer vector logo
 │   ├── favicon.svg               # Browser favicon & mobile app icon
 │   ├── theme.css                 # Core design system & responsive styling
 │   └── theme.js                  # AJAX cart, drawer transitions, and modals
-├── catalog.json                  # Complete 41-product structured catalog
+├── catalog.json                  # Structured 41-product demo catalog
 ├── config/                       # Shopify OS 2.0 settings schemas
 ├── layout/                       # theme.liquid master layout
 ├── locales/                      # en.default.json language strings
@@ -74,20 +74,20 @@ RegardsSportsClub/
 ├── templates/                    # JSON templates (index.json, product.json)
 ├── package.json                  # Node.js project manifest
 ├── server.js                     # Local dev server & Shopify simulation engine
-└── regards-sports-club-theme.zip # Production-ready installable Shopify theme bundle
+└── regards-sports-club-theme.zip # Installable Shopify theme package
 ```
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## 🚀 Running the Demo Locally
 
 ### Prerequisites
 * [Node.js](https://nodejs.org) (v18 or higher)
 * [Git](https://git-scm.com)
 
-### Installation & Launch
+### Quick Start
 
-1. Clone the repository:
+1. Clone this repository:
    ```bash
    git clone https://github.com/naimur-rooted/SportsClub_Ecommerce.git
    cd SportsClub_Ecommerce
@@ -98,35 +98,31 @@ RegardsSportsClub/
    npm install
    ```
 
-3. Start the local development server:
+3. Launch the development server:
    ```bash
    npm start
    ```
 
-4. Open your browser and navigate to:
+4. Open your browser:
    ```text
    http://localhost:4000
    ```
 
 ---
 
-## 📦 Deploying to Shopify Store Admin
+## 📦 Deploying into Shopify Admin
 
-To install this theme directly onto your Shopify store:
-1. Log into your **Shopify Store Admin**.
+To test this theme on a live or development Shopify store:
+1. Open your **Shopify Store Admin**.
 2. Go to **Online Store > Themes**.
-3. Under *Theme library*, click **Add theme > Upload zip file**.
-4. Upload `regards-sports-club-theme.zip` located in the root of this repository.
-5. Click **Actions > Publish** to activate the theme.
+3. Under *Theme library*, select **Add theme > Upload zip file**.
+4. Upload `regards-sports-club-theme.zip` from the root of this repository.
+5. Click **Actions > Preview** or **Publish**.
 
 ---
 
-## 🏛️ Business & Showroom Anchor
-* **Showroom Location:** House #48, Road #03, Block #E, Banasree, Rampura, Dhaka-1219, Bangladesh
-* **Hotline / WhatsApp:** +880 1754-724991 / +880 1629-381501
-* **Trade License:** TRAD/DSCC/002648/2025 (Dhaka South City Corporation)
+## 📄 Showcase Disclaimer & License
 
----
+This project is created and maintained as an **open public demonstration and portfolio showcase** by [naimur-rooted](https://github.com/naimur-rooted). Product mockups and brand assets are utilized solely for creative and technical demonstration purposes.
 
-## 📄 License
-This project is proprietary and maintained for **Regards Sports Club**.
+Released under the [MIT License](LICENSE).
