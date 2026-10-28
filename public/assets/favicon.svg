@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <linearGradient id="favShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A1A"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="favRedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#D63A2F"/>
+    </linearGradient>
+    <linearGradient id="favGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="#0A0A0A"/>
+
+  <g transform="translate(18, 14)">
+    <!-- Outer Shield -->
+    <path d="M 46 2 
+             C 74 2, 90 10, 90 10 
+             L 90 52 
+             C 90 76, 64 90, 46 96 
+             C 28 90, 2 76, 2 52 
+             L 2 10 
+             C 2 10, 18 2, 46 2 Z" 
+          fill="url(#favShieldGrad)" 
+          stroke="url(#favGoldGrad)" 
+          stroke-width="3"/>
+
+    <!-- Dynamic Crimson Slash -->
+    <path d="M 2 34 L 26 12 L 90 56 L 90 74 L 68 88 Z" 
+          fill="url(#favRedGrad)" 
+          opacity="0.95"/>
+
+    <!-- 'R' Monogram -->
+    <rect x="29" y="26" width="9" height="46" rx="2" fill="#FFFFFF"/>
+    <path d="M 38 26 L 56 26 C 65 26, 71 31, 71 39 C 71 47, 65 52, 56 52 L 38 52 Z" fill="#FFFFFF"/>
+    <path d="M 38 33 L 53 33 C 58 33, 62 35.5, 62 39 C 62 42.5, 58 45, 53 45 L 38 45 Z" fill="#111111"/>
+    <path d="M 48 50 L 68 72 L 56 72 L 40 52 Z" fill="#FFFFFF"/>
+  </g>
+</svg>

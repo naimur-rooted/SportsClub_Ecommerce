@@ -8,15 +8,21 @@ const PORT = process.env.PORT || 4000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets
+// Serve static assets (both public/assets and assets/ for Vercel and local)
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/Pictures', express.static(path.join(__dirname, 'Pictures')));
 app.use('/cdn/shop/t/1/assets', express.static(path.join(__dirname, 'assets')));
 
-// Load comprehensive catalog from catalog.json
+// Load comprehensive catalog from catalog.json (safe for root & serverless)
 let catalog = [];
 try {
-  catalog = JSON.parse(fs.readFileSync(path.join(__dirname, 'catalog.json'), 'utf-8'));
+  let catalogFile = path.join(__dirname, 'catalog.json');
+  if (!fs.existsSync(catalogFile)) {
+    catalogFile = path.join(__dirname, '..', 'catalog.json');
+  }
+  catalog = JSON.parse(fs.readFileSync(catalogFile, 'utf-8'));
   console.log(`Loaded ${catalog.length} categorized products from catalog.json`);
 } catch (e) {
   console.error("Error loading catalog.json, using fallback", e);
