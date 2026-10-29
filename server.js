@@ -74,6 +74,92 @@ function recalculateCart() {
   cartState.items_subtotal_price = total;
 }
 
+// =========================================================================
+// CUSTOMER DATABASE, ORDER STORAGE & SESSION COOKIE SYSTEM
+// =========================================================================
+let users = [
+  {
+    id: "usr_101",
+    name: "Naimur Rahman",
+    email: "demo@regards.club",
+    phone: "01754724991",
+    password: "password123",
+    city: "Dhaka",
+    address: "House 48, Road 03, Block E, Banasree, Rampura, Dhaka",
+    createdAt: "2026-10-25T10:00:00.000Z",
+    orders: [
+      {
+        id: "RSC-92418",
+        date: "2026-10-28",
+        total: 1920,
+        status: "Delivered",
+        paymentMethod: "Cash on Delivery",
+        items: [
+          {
+            title: "Argentina Messi Special Edition Farewell Jersey 2026",
+            size: "Size: L",
+            quantity: 1,
+            price: 1850,
+            image: "/assets/products/argentinaPlayr.jpeg"
+          }
+        ]
+      }
+    ]
+  }
+];
+
+let orders = [
+  {
+    id: "RSC-92418",
+    createdAt: "2026-10-28T14:20:00.000Z",
+    customer: {
+      fullName: "Naimur Rahman",
+      phone: "01754724991",
+      email: "demo@regards.club",
+      deliveryZone: "dhaka",
+      address: "House 48, Road 03, Block E, Banasree, Rampura, Dhaka",
+      notes: "Please call before arrival"
+    },
+    items: [
+      {
+        product_title: "Argentina Messi Special Edition Farewell Jersey 2026",
+        variant_title: "Size: L",
+        quantity: 1,
+        price: 185000,
+        featured_image: { url: "/assets/products/argentinaPlayr.jpeg" },
+        properties: { "Personalize Your Jersey (+Tk 250)": "MESSI 10" }
+      }
+    ],
+    subtotal: 1850,
+    deliveryFee: 70,
+    total: 1920,
+    paymentMethod: "Cash on Delivery (COD)",
+    trxId: null,
+    status: "Delivered"
+  }
+];
+
+function parseCookies(req) {
+  const list = {};
+  const cookieHeader = req.headers?.cookie;
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach(cookie => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (!name) return;
+    list[name] = decodeURIComponent(rest.join('=').trim());
+  });
+  return list;
+}
+
+function getLoggedInUser(req) {
+  const cookies = parseCookies(req);
+  const email = cookies.rsc_user_email;
+  if (!email) return null;
+  return users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+}
+
+
 // SHOPIFY CART API ENDPOINTS
 app.get('/cart.js', (req, res) => {
   recalculateCart();
@@ -168,7 +254,7 @@ app.get('/search/suggest.json', (req, res) => {
 });
 
 // SHARED HEADER COMPONENT
-function getHeaderHtml(activeNav = '') {
+function getHeaderHtml(activeNav = '', currentUser = null) {
   return `
   <!-- Top Ticker Bar -->
   <div class="announcement-bar">
@@ -236,15 +322,44 @@ function getHeaderHtml(activeNav = '') {
 
       <div class="site-header__actions">
         <!-- Live Predictive Search Trigger -->
-        <button type="button" class="header-icon-btn" id="search-drawer-open" aria-label="Search Catalog">
+        <button type="button" class="header-icon-btn" id="search-drawer-open" aria-label="Search Catalog" title="Search Kits">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
 
+        <!-- Customer Account / Auth Menu -->
+        ${currentUser ? `
+          <div class="header-account-menu">
+            <a href="/account" class="header-account-btn" title="My Account (${currentUser.name})">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="header-user-name">${currentUser.name.split(' ')[0]}</span>
+            </a>
+            <div class="header-account-dropdown">
+              <div style="padding: 1.2rem 1.4rem; border-bottom: 1px solid #f0f0f0; background: #fafafa;">
+                <div style="font-weight: 700; font-size: 1.35rem; color: #111;">${currentUser.name}</div>
+                <div style="font-size: 1.15rem; color: #777;">${currentUser.email}</div>
+              </div>
+              <a href="/account" class="header-dropdown-link">👤 My Profile & Orders</a>
+              <a href="/checkout" class="header-dropdown-link">🛍️ Checkout Form</a>
+              <a href="/account/logout" class="header-dropdown-link" style="color: var(--color-primary);">🚪 Sign Out</a>
+            </div>
+          </div>
+        ` : `
+          <a href="/account/login" class="header-icon-btn" title="Sign In / Register" aria-label="Customer Login">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </a>
+        `}
+
         <!-- Cart Trigger -->
-        <button type="button" class="header-icon-btn" data-cart-trigger aria-label="Open Cart">
+        <button type="button" class="header-icon-btn" data-cart-trigger aria-label="Open Cart" title="View Kit Bag">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -314,6 +429,28 @@ function getHeaderHtml(activeNav = '') {
         <a href="/pages/contact">SHOWROOM & CONTACT</a>
       </nav>
       <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid #eee; font-size: 1.3rem; color: #666;">
+        <!-- Mobile Customer Auth Section -->
+        <div style="padding: 1.4rem 0; border-top: 1px solid #eee; margin-top: 1.2rem;">
+          ${currentUser ? `
+            <div style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.8rem; color: #111;">
+              👤 Signed in: <strong>${currentUser.name}</strong>
+            </div>
+            <div style="display: flex; gap: 0.8rem;">
+              <a href="/account" class="btn btn-outline" style="flex: 1; padding: 0.85rem; font-size: 1.25rem; text-align: center;">My Account</a>
+              <a href="/account/logout" class="btn btn-outline" style="flex: 1; padding: 0.85rem; font-size: 1.25rem; text-align: center; color: var(--color-primary); border-color: var(--color-primary);">Sign Out</a>
+            </div>
+          ` : `
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+              <a href="/account/login" class="btn btn-primary btn-block" style="padding: 1.1rem; text-align: center; font-size: 1.35rem;">
+                Sign In to Account
+              </a>
+              <a href="/account/register" class="btn btn-outline btn-block" style="padding: 1rem; text-align: center; font-size: 1.3rem;">
+                Create Account
+              </a>
+            </div>
+          `}
+        </div>
+
         <p>📞 Hotline: +880 1754-724991</p>
         <p>📍 Banasree, Rampura, Dhaka</p>
       </div>
@@ -432,9 +569,9 @@ function getCartDrawerHtml() {
       <p style="font-size: 1.25rem; color: var(--color-text-muted); margin-bottom: 1.6rem;">
         Taxes calculated at checkout. Cash on delivery available inside & outside Dhaka.
       </p>
-      <button type="button" class="btn btn-primary btn-block" style="padding: 1.6rem; font-size: 1.5rem;" onclick="alert('Order proceeding to Checkout! Cash on Delivery verified.');">
-        Proceed to Checkout
-      </button>
+      <a href="/checkout" class="btn btn-primary btn-block" style="padding: 1.6rem; font-size: 1.5rem; text-align: center; text-decoration: none; display: block; font-weight: 700; letter-spacing: 0.04em;">
+        Proceed to Checkout &rarr;
+      </a>
     </div>
   </aside>
   `;
@@ -547,6 +684,7 @@ function renderProductCard(p) {
 
 // 1. HOMEPAGE ROUTE
 app.get('/', (req, res) => {
+  const currentUser = getLoggedInUser(req);
   // Categorize for AJAX tabs
   const allJerseys = catalog.filter(p => p.categories.includes('club-jersey') || p.categories.includes('world-cup-2026') || p.categories.includes('national-jersey') || p.categories.includes('retro-jersey')).slice(0, 8);
   const trousers = catalog.filter(p => p.categories.includes('trousers-shorts')).slice(0, 6);
@@ -566,7 +704,7 @@ app.get('/', (req, res) => {
     <link rel="stylesheet" href="/assets/theme.css">
   </head>
   <body>
-    ${getHeaderHtml('home')}
+    ${getHeaderHtml('home', currentUser)}
 
     <!-- Hero Slideshow Banner -->
     <section class="hero-slideshow">
@@ -746,6 +884,7 @@ app.get('/', (req, res) => {
 
 // 2. PRODUCT DETAIL PAGE (PDP) WITH MULTI-ANGLE GALLERY & HOVER ZOOM
 app.get('/products/:handle', (req, res) => {
+  const currentUser = getLoggedInUser(req);
   const prod = catalog.find(p => p.handle === req.params.handle) || catalog[0];
   const images = (prod.images && prod.images.length > 0) ? prod.images : [prod.featured_image];
 
@@ -767,7 +906,7 @@ app.get('/products/:handle', (req, res) => {
     <link rel="stylesheet" href="/assets/theme.css">
   </head>
   <body>
-    ${getHeaderHtml('jersey')}
+    ${getHeaderHtml('jersey', currentUser)}
 
     <section class="section-padding">
       <div class="container">
@@ -1070,6 +1209,7 @@ app.get('/products/:handle', (req, res) => {
 
 // 3. COLLECTIONS ROUTE (EVERY CATEGORY PAGE + SUB-FILTERING + SEARCH)
 app.get('/collections/:handle', (req, res) => {
+  const currentUser = getLoggedInUser(req);
   const handle = req.params.handle;
   const q = (req.query.q || '').toLowerCase().trim();
   const sortBy = req.query.sort_by || 'featured';
@@ -1266,6 +1406,7 @@ app.get('/search', (req, res) => {
 
 // 5. CONTACT / SHOWROOM ROUTE
 app.get('/pages/contact', (req, res) => {
+  const currentUser = getLoggedInUser(req);
   const html = `
   <!doctype html>
   <html lang="en">
@@ -1278,7 +1419,7 @@ app.get('/pages/contact', (req, res) => {
     <link rel="stylesheet" href="/assets/theme.css">
   </head>
   <body>
-    ${getHeaderHtml()}
+    ${getHeaderHtml('', currentUser)}
 
     <section class="section-padding">
       <div class="container" style="max-width: 800px;">
@@ -1313,7 +1454,848 @@ app.get('/pages/contact', (req, res) => {
 
 // START SERVER (Localhost or Vercel Serverless)
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
+  
+// =========================================================================
+// CUSTOMER AUTHENTICATION & ACCOUNT ROUTES (LOGIN / REGISTER / ACCOUNT / LOGOUT)
+// =========================================================================
+
+// 1. LOGIN PAGE (GET)
+app.get('/account/login', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  if (currentUser) return res.redirect('/account');
+
+  const error = req.query.error;
+  const registered = req.query.registered;
+  const loggedOut = req.query.logged_out;
+  const returnTo = req.query.return_to || '/account';
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Customer Sign In | Regards Sports Club</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/theme.css">
+  </head>
+  <body>
+    ${getHeaderHtml('', currentUser)}
+
+    <main class="section-padding" style="background-color: var(--color-bg-sand); min-height: 75vh;">
+      <div class="container">
+        <div class="auth-wrapper">
+          <h1 class="auth-title">Sign In</h1>
+          <p class="auth-subtitle">Access your RSC kit orders, tracking & saved delivery details.</p>
+
+          ${error ? `
+            <div style="background: #FEE2E2; border: 1px solid #EF4444; color: #B91C1C; padding: 1.2rem; border-radius: 6px; font-size: 1.35rem; margin-bottom: 2rem;">
+              ⚠️ Invalid email or password. Please try again or use the 1-Click Demo Login below.
+            </div>
+          ` : ''}
+
+          ${registered ? `
+            <div style="background: #DCFCE7; border: 1px solid #22C55E; color: #15803D; padding: 1.2rem; border-radius: 6px; font-size: 1.35rem; margin-bottom: 2rem;">
+              🎉 Account created successfully! Please sign in with your credentials.
+            </div>
+          ` : ''}
+
+          ${loggedOut ? `
+            <div style="background: #F3F4F6; border: 1px solid #D1D5DB; color: #374151; padding: 1.2rem; border-radius: 6px; font-size: 1.35rem; margin-bottom: 2rem;">
+              🔒 You have successfully signed out.
+            </div>
+          ` : ''}
+
+          <form action="/account/login" method="post">
+            <input type="hidden" name="return_to" value="${returnTo}">
+            <div class="auth-form-group">
+              <label class="auth-label" for="login-email">Email Address</label>
+              <input type="email" id="login-email" name="email" class="auth-input" placeholder="e.g. customer@regards.club" required value="demo@regards.club">
+            </div>
+
+            <div class="auth-form-group">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <label class="auth-label" for="login-password">Password</label>
+                <a href="#forgot" onclick="alert('Demo Mode: Use password "password123" or register a new account.'); return false;" style="font-size: 1.25rem; color: var(--color-primary); text-decoration: underline;">Forgot?</a>
+              </div>
+              <input type="password" id="login-password" name="password" class="auth-input" placeholder="Enter your password" required value="password123">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="padding: 1.4rem; font-size: 1.5rem; margin-top: 1rem;">
+              Sign In to Your Account
+            </button>
+          </form>
+
+          <!-- 1-Click Quick Demo Login Box -->
+          <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #eee; text-align: center;">
+            <p style="font-size: 1.25rem; color: #666; margin-bottom: 1rem;">Testing the store as a reviewer?</p>
+            <form action="/account/login" method="post">
+              <input type="hidden" name="email" value="demo@regards.club">
+              <input type="hidden" name="password" value="password123">
+              <input type="hidden" name="return_to" value="${returnTo}">
+              <button type="submit" class="btn btn-outline btn-block" style="padding: 1rem; font-size: 1.3rem; background: #FFF;">
+                ⚡ 1-Click Demo Login (Naimur Rahman)
+              </button>
+            </form>
+          </div>
+
+          <div style="margin-top: 2.5rem; text-align: center; font-size: 1.4rem; color: #666;">
+            Don't have an account yet? 
+            <a href="/account/register" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Create One Here</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    ${getFooterHtml()}
+    ${getCartDrawerHtml()}
+    <script src="/assets/theme.js"></script>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+// 2. LOGIN PROCESS (POST)
+app.post('/account/login', (req, res) => {
+  const { email, password, return_to = '/account' } = req.body;
+  const user = users.find(u => u.email.toLowerCase() === (email || '').trim().toLowerCase());
+
+  if (!user || user.password !== password) {
+    return res.redirect(`/account/login?error=invalid&return_to=${encodeURIComponent(return_to)}`);
+  }
+
+  // Set session cookie (30 days)
+  res.setHeader('Set-Cookie', `rsc_user_email=${encodeURIComponent(user.email)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+  res.redirect(return_to || '/account');
+});
+
+// 3. REGISTER PAGE (GET)
+app.get('/account/register', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  if (currentUser) return res.redirect('/account');
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Create Customer Account | Regards Sports Club</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/theme.css">
+  </head>
+  <body>
+    ${getHeaderHtml('', currentUser)}
+
+    <main class="section-padding" style="background-color: var(--color-bg-sand); min-height: 75vh;">
+      <div class="container">
+        <div class="auth-wrapper" style="max-width: 540px;">
+          <h1 class="auth-title">Create Account</h1>
+          <p class="auth-subtitle">Join the RSC Club for 1-click checkout, instant drops & tracking.</p>
+
+          <form action="/account/register" method="post">
+            <div class="auth-form-group">
+              <label class="auth-label" for="reg-name">Full Name *</label>
+              <input type="text" id="reg-name" name="name" class="auth-input" placeholder="e.g. Tanvir Ahmed" required>
+            </div>
+
+            <div class="checkout-input-row checkout-input-row--2 auth-form-group">
+              <div>
+                <label class="auth-label" for="reg-email">Email Address *</label>
+                <input type="email" id="reg-email" name="email" class="auth-input" placeholder="tanvir@example.com" required>
+              </div>
+              <div>
+                <label class="auth-label" for="reg-phone">Phone Number (Bangladesh) *</label>
+                <input type="tel" id="reg-phone" name="phone" class="auth-input" placeholder="017XXXXXXXX" required>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-label" for="reg-password">Password (Minimum 6 Characters) *</label>
+              <input type="password" id="reg-password" name="password" class="auth-input" placeholder="••••••••" minlength="6" required>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-label" for="reg-address">Delivery Address (Optional)</label>
+              <input type="text" id="reg-address" name="address" class="auth-input" placeholder="House, Road, Area, Dhaka">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="padding: 1.4rem; font-size: 1.5rem; margin-top: 1rem;">
+              Complete Registration &rarr;
+            </button>
+          </form>
+
+          <div style="margin-top: 2.5rem; text-align: center; font-size: 1.4rem; color: #666;">
+            Already have an RSC account? 
+            <a href="/account/login" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Sign In Here</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    ${getFooterHtml()}
+    ${getCartDrawerHtml()}
+    <script src="/assets/theme.js"></script>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+// 4. REGISTER PROCESS (POST)
+app.post('/account/register', (req, res) => {
+  const { name, email, phone, password, address = '' } = req.body;
+
+  if (!name || !email || !password) {
+    return res.redirect('/account/register?error=missing_fields');
+  }
+
+  // Check if exists
+  const existing = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
+  if (existing) {
+    return res.redirect('/account/login?error=exists');
+  }
+
+  const newUser = {
+    id: 'usr_' + Date.now(),
+    name: name.trim(),
+    email: email.trim(),
+    phone: (phone || '').trim(),
+    password: password,
+    city: 'Dhaka',
+    address: address.trim(),
+    createdAt: new Date().toISOString(),
+    orders: []
+  };
+
+  users.push(newUser);
+
+  // Set session cookie
+  res.setHeader('Set-Cookie', `rsc_user_email=${encodeURIComponent(newUser.email)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+  res.redirect('/account');
+});
+
+// 5. ACCOUNT DASHBOARD (GET)
+app.get('/account', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  if (!currentUser) {
+    return res.redirect('/account/login?return_to=/account');
+  }
+
+  // Combine user.orders and global orders for this user
+  const userOrders = orders.filter(o => 
+    (o.customer && o.customer.email && o.customer.email.toLowerCase() === currentUser.email.toLowerCase()) ||
+    (currentUser.orders && currentUser.orders.some(uo => uo.id === o.id))
+  );
+
+  const updated = req.query.updated;
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Customer Dashboard | Regards Sports Club</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/theme.css">
+  </head>
+  <body>
+    ${getHeaderHtml('account', currentUser)}
+
+    <main class="section-padding" style="background-color: var(--color-bg-sand); min-height: 80vh;">
+      <div class="container">
+        <!-- Dashboard Top Banner -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
+          <div>
+            <h1 style="font-size: 3rem; margin: 0 0 0.4rem;">Hello, ${currentUser.name}!</h1>
+            <p style="color: #666; font-size: 1.45rem; margin: 0;">Welcome to your Regards Sports Club customer portal.</p>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <a href="/checkout" class="btn btn-primary" style="padding: 1rem 1.8rem; font-size: 1.35rem;">🛍️ Proceed to Checkout</a>
+            <a href="/account/logout" class="btn btn-outline" style="padding: 1rem 1.6rem; font-size: 1.35rem; color: var(--color-primary); border-color: var(--color-primary);">🚪 Sign Out</a>
+          </div>
+        </div>
+
+        ${updated ? `
+          <div style="background: #DCFCE7; border: 1px solid #22C55E; color: #15803D; padding: 1.2rem; border-radius: 6px; font-size: 1.35rem; margin-bottom: 2rem;">
+            ✅ Profile and delivery address updated successfully!
+          </div>
+        ` : ''}
+
+        <div class="account-grid">
+          <!-- Left Column: Customer Profile & Saved Delivery Address -->
+          <div class="account-card">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;">
+              👤 Customer Profile
+            </h2>
+            <form action="/account/update" method="post">
+              <div class="auth-form-group">
+                <label class="auth-label" for="prof-name">Full Name</label>
+                <input type="text" id="prof-name" name="name" class="auth-input" value="${currentUser.name}" required>
+              </div>
+
+              <div class="auth-form-group">
+                <label class="auth-label">Email Address (Read-only)</label>
+                <input type="email" class="auth-input" value="${currentUser.email}" disabled style="background: #f7f7f7; color: #888;">
+              </div>
+
+              <div class="auth-form-group">
+                <label class="auth-label" for="prof-phone">Contact Phone</label>
+                <input type="tel" id="prof-phone" name="phone" class="auth-input" value="${currentUser.phone || ''}" placeholder="017XXXXXXXX">
+              </div>
+
+              <div class="auth-form-group">
+                <label class="auth-label" for="prof-address">Default Delivery Street Address</label>
+                <textarea id="prof-address" name="address" class="auth-input" rows="3" placeholder="House, Road, Area, Dhaka">${currentUser.address || ''}</textarea>
+              </div>
+
+              <button type="submit" class="btn btn-outline btn-block" style="padding: 1.2rem; font-size: 1.35rem; font-weight: 700;">
+                Update Saved Details
+              </button>
+            </form>
+          </div>
+
+          <!-- Right Column: Order History & Live Line-Item Tracking -->
+          <div class="account-card" id="orders">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+              <span>📦 My Order History (${userOrders.length})</span>
+              <span style="font-size: 1.3rem; color: #888; font-weight: normal;">Steadfast & Pathao Courier Track</span>
+            </h2>
+
+            ${userOrders.length === 0 ? `
+              <div style="text-align: center; padding: 5rem 2rem;">
+                <p style="font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem;">No orders placed yet.</p>
+                <p style="color: #666; font-size: 1.45rem; margin-bottom: 2.5rem;">Pick from our Player Edition 2026/27 kits, retro classics & turf shoes.</p>
+                <a href="/collections/all" class="btn btn-primary" style="padding: 1.2rem 2.5rem; font-size: 1.4rem;">Browse Match Kits</a>
+              </div>
+            ` : `
+              <div style="display: flex; flex-direction: column; gap: 2rem;">
+                ${userOrders.map(order => `
+                  <div style="border: 1px solid #E5E5E5; border-radius: 8px; padding: 2rem; background: #FAFAFA;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid #EAEAEA; padding-bottom: 1.2rem; margin-bottom: 1.5rem;">
+                      <div>
+                        <span style="font-size: 1.6rem; font-weight: 700; color: var(--color-dark);">Order ${order.id}</span>
+                        <span style="margin-left: 1rem; font-size: 1.3rem; color: #777;">${order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB') : (order.date || 'Recent')}</span>
+                      </div>
+                      <span class="badge ${order.status === 'Delivered' ? 'badge-new' : 'badge-hot'}" style="font-size: 1.15rem; padding: 0.4rem 1rem;">
+                        ${order.status}
+                      </span>
+                    </div>
+
+                    <!-- Items List -->
+                    <div style="display: flex; flex-direction: column; gap: 1.2rem; margin-bottom: 1.5rem;">
+                      ${order.items.map(item => `
+                        <div style="display: flex; align-items: center; gap: 1.4rem;">
+                          <img src="${(item.featured_image && item.featured_image.url) ? item.featured_image.url : (item.image || '/assets/products/argentinaPlayr.jpeg')}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid #eee;">
+                          <div style="flex: 1;">
+                            <div style="font-weight: 600; font-size: 1.4rem;">${item.product_title || item.title}</div>
+                            <div style="font-size: 1.25rem; color: #666;">${item.variant_title || item.size || 'Standard'} • Qty: ${item.quantity}</div>
+                            ${item.properties && Object.keys(item.properties).length ? `
+                              <div style="font-size: 1.15rem; color: var(--color-primary); font-weight: 600;">
+                                ${Object.entries(item.properties).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+                              </div>
+                            ` : ''}
+                          </div>
+                          <div style="font-weight: 700; font-size: 1.45rem;">
+                            Tk ${item.price ? ((item.price > 10000 ? item.price / 100 : item.price)).toLocaleString() : '1,850'}
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-top: 1px solid #EAEAEA; padding-top: 1.2rem; font-size: 1.35rem;">
+                      <div>
+                        <strong>Payment:</strong> ${order.paymentMethod || 'Cash on Delivery'}
+                        ${order.trxId ? ` (TrxID: <code>${order.trxId}</code>)` : ''}
+                      </div>
+                      <div style="font-size: 1.6rem; font-weight: 700; color: var(--color-primary);">
+                        Total: Tk ${(order.total || 1920).toLocaleString()}
+                      </div>
+                    </div>
+
+                    <div style="margin-top: 1.2rem; text-align: right;">
+                      <a href="https://wa.me/8801754724991?text=${encodeURIComponent('Hello Regards Sports Club! I have an inquiry about my Order ' + order.id)}" target="_blank" class="btn btn-whatsapp" style="padding: 0.8rem 1.4rem; font-size: 1.25rem;">
+                        💬 WhatsApp Tracking for ${order.id}
+                      </a>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
+    </main>
+
+    ${getFooterHtml()}
+    ${getCartDrawerHtml()}
+    <script src="/assets/theme.js"></script>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+// 6. UPDATE PROFILE (POST)
+app.post('/account/update', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  if (!currentUser) return res.redirect('/account/login');
+
+  const { name, phone, address } = req.body;
+  if (name) currentUser.name = name.trim();
+  if (phone) currentUser.phone = phone.trim();
+  if (address) currentUser.address = address.trim();
+
+  res.redirect('/account?updated=1');
+});
+
+// 7. LOGOUT (GET)
+app.get('/account/logout', (req, res) => {
+  res.setHeader('Set-Cookie', 'rsc_user_email=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+  res.redirect('/account/login?logged_out=1');
+});
+
+// =========================================================================
+// CHECKOUT & ORDER COMPLETION SYSTEM (/checkout & /orders/:orderId)
+// =========================================================================
+
+// 1. CHECKOUT FORM PAGE (GET)
+app.get('/checkout', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  recalculateCart();
+
+  const subtotalBDT = cartState.total_price / 100;
+  const isFreeDelivery = subtotalBDT >= 2000;
+  const defaultDeliveryFee = isFreeDelivery ? 0 : 70;
+  const initialTotalBDT = subtotalBDT + defaultDeliveryFee;
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Checkout | Regards Sports Club</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/theme.css">
+  </head>
+  <body style="background-color: var(--color-bg-sand);">
+    ${getHeaderHtml('checkout', currentUser)}
+
+    <main class="section-padding">
+      <div class="container">
+        <!-- Breadcrumb / Header -->
+        <div style="margin-bottom: 2.5rem;">
+          <h1 style="font-size: 3.2rem; margin: 0 0 0.5rem;">Fast Secure Checkout</h1>
+          <p style="color: #666; font-size: 1.45rem; margin: 0;">Complete your shipping information and payment method below.</p>
+        </div>
+
+        ${cartState.items.length === 0 ? `
+          <div class="checkout-section" style="text-align: center; padding: 6rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🛍️</div>
+            <h2 style="font-size: 2.4rem; margin-bottom: 1rem;">Your Kit Bag is Empty</h2>
+            <p style="color: #666; font-size: 1.5rem; margin-bottom: 2.5rem;">Select your favorite player editions, retro jerseys, or turf shoes to checkout.</p>
+            <a href="/collections/all" class="btn btn-primary" style="padding: 1.4rem 3rem; font-size: 1.5rem;">Explore Match Jerseys</a>
+          </div>
+        ` : `
+          <div class="checkout-grid">
+            <!-- Left Column: Shipping Details & Payment Form -->
+            <div>
+              <form action="/checkout/process" method="post" id="checkout-form">
+                <!-- Step 1: Customer Contact -->
+                <div class="checkout-section">
+                  <div class="checkout-section-title">
+                    <span>1.</span> <span>Contact Information</span>
+                  </div>
+                  <div class="checkout-input-row checkout-input-row--2">
+                    <div class="auth-form-group">
+                      <label class="auth-label" for="chk-email">Email Address *</label>
+                      <input type="email" id="chk-email" name="email" class="auth-input" placeholder="you@example.com" value="${currentUser ? currentUser.email : ''}" required>
+                    </div>
+                    <div class="auth-form-group">
+                      <label class="auth-label" for="chk-phone">Mobile Phone (For Courier Delivery SMS) *</label>
+                      <input type="tel" id="chk-phone" name="phone" class="auth-input" placeholder="017XXXXXXXX" value="${currentUser ? (currentUser.phone || '') : ''}" required>
+                    </div>
+                  </div>
+                  ${!currentUser ? `
+                    <div style="font-size: 1.3rem; color: #666;">
+                      Already an RSC member? <a href="/account/login?return_to=/checkout" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">Sign In for Auto-Fill</a>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <!-- Step 2: Delivery Details -->
+                <div class="checkout-section">
+                  <div class="checkout-section-title">
+                    <span>2.</span> <span>Delivery Address</span>
+                  </div>
+                  <div class="auth-form-group">
+                    <label class="auth-label" for="chk-name">Recipient Full Name *</label>
+                    <input type="text" id="chk-name" name="fullName" class="auth-input" placeholder="e.g. Naimur Rahman" value="${currentUser ? currentUser.name : ''}" required>
+                  </div>
+
+                  <div class="auth-form-group">
+                    <label class="auth-label">Delivery Zone *</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+                      <label class="payment-method-card is-selected" id="zone-dhaka-card" style="margin: 0; cursor: pointer;">
+                        <input type="radio" name="deliveryZone" value="dhaka" checked onchange="updateDeliveryFee('dhaka')" style="margin-top: 0.3rem;">
+                        <div>
+                          <div style="font-weight: 700; font-size: 1.4rem;">Dhaka City</div>
+                          <div style="font-size: 1.25rem; color: #666;">${isFreeDelivery ? 'FREE Delivery' : '৳70 (1-2 Days)'}</div>
+                        </div>
+                      </label>
+
+                      <label class="payment-method-card" id="zone-outside-card" style="margin: 0; cursor: pointer;">
+                        <input type="radio" name="deliveryZone" value="outside" onchange="updateDeliveryFee('outside')" style="margin-top: 0.3rem;">
+                        <div>
+                          <div style="font-weight: 700; font-size: 1.4rem;">Outside Dhaka</div>
+                          <div style="font-size: 1.25rem; color: #666;">${isFreeDelivery ? 'FREE Delivery' : '৳120 (2-3 Days)'}</div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="auth-form-group">
+                    <label class="auth-label" for="chk-address">Full Street Address (House, Road, Area, Thana) *</label>
+                    <textarea id="chk-address" name="address" class="auth-input" rows="3" placeholder="e.g. House 48, Road 03, Block E, Banasree, Rampura, Dhaka" required>${currentUser ? (currentUser.address || '') : ''}</textarea>
+                  </div>
+
+                  <div class="auth-form-group" style="margin-bottom: 0;">
+                    <label class="auth-label" for="chk-notes">Special Courier Instructions (Optional)</label>
+                    <input type="text" id="chk-notes" name="notes" class="auth-input" placeholder="e.g. Call before delivery, deliver after 3 PM">
+                  </div>
+                </div>
+
+                <!-- Step 3: Payment Method Selection -->
+                <div class="checkout-section">
+                  <div class="checkout-section-title">
+                    <span>3.</span> <span>Payment Method</span>
+                  </div>
+
+                  <!-- Option 1: Cash on Delivery (COD) -->
+                  <label class="payment-method-card is-selected" id="pay-cod-card" onclick="selectPayment('cod')">
+                    <input type="radio" name="paymentMethod" value="Cash on Delivery (COD)" checked style="margin-top: 0.4rem;">
+                    <div>
+                      <div style="font-weight: 700; font-size: 1.5rem; color: #111;">💵 Cash on Delivery (Full COD)</div>
+                      <div style="font-size: 1.3rem; color: #666; margin-top: 0.4rem;">
+                        Pay cash when Steadfast / Pathao courier arrives at your door. No advance fee required.
+                      </div>
+                    </div>
+                  </label>
+
+                  <!-- Option 2: bKash Payment -->
+                  <label class="payment-method-card" id="pay-bkash-card" onclick="selectPayment('bkash')">
+                    <input type="radio" name="paymentMethod" value="bKash Payment" style="margin-top: 0.4rem;">
+                    <div style="flex: 1;">
+                      <div style="font-weight: 700; font-size: 1.5rem; color: #111; display: flex; align-items: center; gap: 0.8rem;">
+                        <span>📱 bKash Payment</span>
+                        <span style="background: #E2136E; color: #fff; font-size: 1.1rem; padding: 0.2rem 0.6rem; border-radius: 4px;">Official</span>
+                      </div>
+                      <div style="font-size: 1.3rem; color: #666; margin-top: 0.4rem;">
+                        Send Money / Merchant Pay to RSC Official Wallet: <strong>01754724991</strong>
+                      </div>
+                      <div id="bkash-trx-box" style="display: none; margin-top: 1rem;">
+                        <input type="text" name="trxId" class="auth-input" placeholder="Enter 10-digit bKash TrxID (e.g. BKT982341)">
+                      </div>
+                    </div>
+                  </label>
+
+                  <!-- Option 3: Nagad / Rocket -->
+                  <label class="payment-method-card" id="pay-nagad-card" onclick="selectPayment('nagad')">
+                    <input type="radio" name="paymentMethod" value="Nagad / Rocket" style="margin-top: 0.4rem;">
+                    <div>
+                      <div style="font-weight: 700; font-size: 1.5rem; color: #111;">⚡ Nagad / Rocket Payment</div>
+                      <div style="font-size: 1.3rem; color: #666; margin-top: 0.4rem;">
+                        Send Money to <strong>01754724991</strong> and provide your confirmation TrxID.
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-block" id="place-order-btn" style="padding: 1.8rem; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em;">
+                  Complete Order & Place Delivery &rarr;
+                </button>
+              </form>
+            </div>
+
+            <!-- Right Column: Order Summary & Item Breakdown -->
+            <div class="checkout-order-summary">
+              <h2 style="font-size: 2rem; margin-bottom: 2rem; padding-bottom: 1.2rem; border-bottom: 1px solid #eee;">
+                Order Summary (${cartState.item_count} items)
+              </h2>
+
+              <div style="display: flex; flex-direction: column; gap: 1.5rem; max-height: 380px; overflow-y: auto; padding-right: 0.5rem; margin-bottom: 2rem;">
+                ${cartState.items.map(item => `
+                  <div style="display: flex; gap: 1.4rem; align-items: center;">
+                    <div style="position: relative;">
+                      <img src="${item.featured_image.url}" alt="${item.product_title}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; background: #fafafa;">
+                      <span style="position: absolute; top: -8px; right: -8px; background: #222; color: #fff; font-size: 1.1rem; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">${item.quantity}</span>
+                    </div>
+                    <div style="flex: 1;">
+                      <div style="font-weight: 600; font-size: 1.4rem; line-height: 1.3;">${item.product_title}</div>
+                      <div style="font-size: 1.25rem; color: #666; margin-top: 0.2rem;">${item.variant_title}</div>
+                      ${item.properties && Object.keys(item.properties).length ? `
+                        <div style="font-size: 1.15rem; color: var(--color-primary); font-weight: 600;">
+                          ${Object.entries(item.properties).map(([k, v]) => `<div>${k}: ${v}</div>`).join('')}
+                        </div>
+                      ` : ''}
+                    </div>
+                    <div style="font-weight: 700; font-size: 1.45rem;">
+                      Tk ${(item.line_price / 100).toLocaleString()}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <!-- Price Breakdown -->
+              <div style="border-top: 1px solid #eee; padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; font-size: 1.45rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #666;">Subtotal</span>
+                  <span style="font-weight: 600;">Tk ${subtotalBDT.toLocaleString()}</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #666;">Express Courier Shipping</span>
+                  <span id="shipping-display-fee" style="font-weight: 600; color: ${isFreeDelivery ? 'var(--color-success)' : '#111'};">
+                    ${isFreeDelivery ? 'FREE (Threshold Reached)' : `Tk ${defaultDeliveryFee}`}
+                  </span>
+                </div>
+
+                ${isFreeDelivery ? `
+                  <div style="background: #DCFCE7; color: #166534; font-size: 1.25rem; font-weight: 600; padding: 0.6rem 1rem; border-radius: 4px;">
+                    🎉 <strong>Congratulations!</strong> You unlocked FREE nationwide express delivery!
+                  </div>
+                ` : `
+                  <div style="font-size: 1.2rem; color: #888;">
+                    💡 Orders over Tk 2,000 get FREE nationwide delivery.
+                  </div>
+                `}
+
+                <div style="border-top: 2px solid #111; padding-top: 1.4rem; margin-top: 0.5rem; display: flex; justify-content: space-between; font-size: 1.9rem; font-weight: 800;">
+                  <span>Grand Total</span>
+                  <span id="grand-total-display" style="color: var(--color-primary);">Tk ${initialTotalBDT.toLocaleString()}</span>
+                </div>
+              </div>
+
+              <!-- Trust Guarantee Seals -->
+              <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 1rem; font-size: 1.25rem; color: #666;">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                  <span>🔒</span> <span>256-Bit SSL Encrypted & Protected Checkout</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                  <span>🚚</span> <span>Nationwide Delivery by Steadfast & Pathao Courier</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                  <span>🔄</span> <span>7-Day Instant Size Exchange Guarantee at Banasree</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `}
+      </div>
+    </main>
+
+    ${getFooterHtml()}
+    ${getCartDrawerHtml()}
+
+    <script>
+      const subtotalVal = ${subtotalBDT};
+      const isFree = ${isFreeDelivery};
+
+      function updateDeliveryFee(zone) {
+        document.getElementById('zone-dhaka-card').classList.toggle('is-selected', zone === 'dhaka');
+        document.getElementById('zone-outside-card').classList.toggle('is-selected', zone === 'outside');
+
+        let fee = 0;
+        if (!isFree) {
+          fee = (zone === 'dhaka') ? 70 : 120;
+        }
+
+        const feeText = isFree ? 'FREE (Threshold Reached)' : ('Tk ' + fee);
+        document.getElementById('shipping-display-fee').textContent = feeText;
+        document.getElementById('shipping-display-fee').style.color = isFree ? 'var(--color-success)' : '#111';
+
+        const total = subtotalVal + fee;
+        document.getElementById('grand-total-display').textContent = 'Tk ' + total.toLocaleString();
+        const btn = document.getElementById('place-order-btn');
+        if (btn) btn.textContent = 'Complete Order & Place Delivery (Tk ' + total.toLocaleString() + ') →';
+      }
+
+      function selectPayment(type) {
+        document.getElementById('pay-cod-card').classList.toggle('is-selected', type === 'cod');
+        document.getElementById('pay-bkash-card').classList.toggle('is-selected', type === 'bkash');
+        document.getElementById('pay-nagad-card').classList.toggle('is-selected', type === 'nagad');
+
+        const trxBox = document.getElementById('bkash-trx-box');
+        if (trxBox) trxBox.style.display = (type === 'bkash') ? 'block' : 'none';
+      }
+    </script>
+    <script src="/assets/theme.js"></script>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+// 2. CHECKOUT PROCESS (POST)
+app.post('/checkout/process', (req, res) => {
+  recalculateCart();
+  if (cartState.items.length === 0) {
+    return res.redirect('/checkout');
+  }
+
+  const { fullName, phone, email, deliveryZone, address, notes, paymentMethod, trxId } = req.body;
+  const subtotalBDT = cartState.total_price / 100;
+  const isFree = subtotalBDT >= 2000;
+  const deliveryFee = isFree ? 0 : (deliveryZone === 'dhaka' ? 70 : 120);
+  const totalBDT = subtotalBDT + deliveryFee;
+
+  const orderId = 'RSC-' + Math.floor(10000 + Math.random() * 90000);
+
+  const newOrder = {
+    id: orderId,
+    createdAt: new Date().toISOString(),
+    customer: {
+      fullName: (fullName || 'Valued Customer').trim(),
+      phone: (phone || '').trim(),
+      email: (email || '').trim(),
+      deliveryZone: deliveryZone || 'dhaka',
+      address: (address || 'Banasree, Dhaka').trim(),
+      notes: (notes || '').trim()
+    },
+    items: JSON.parse(JSON.stringify(cartState.items)),
+    subtotal: subtotalBDT,
+    deliveryFee: deliveryFee,
+    total: totalBDT,
+    paymentMethod: paymentMethod || 'Cash on Delivery (COD)',
+    trxId: trxId || null,
+    status: 'Confirmed & In Preparation'
+  };
+
+  orders.unshift(newOrder);
+
+  // If user is logged in, link order to account
+  const currentUser = getLoggedInUser(req);
+  if (currentUser) {
+    currentUser.orders = currentUser.orders || [];
+    currentUser.orders.unshift(newOrder);
+  }
+
+  // Clear cart
+  cartState.items = [];
+  recalculateCart();
+
+  res.redirect(`/orders/${orderId}`);
+});
+
+// 3. ORDER CONFIRMATION / SUCCESS PAGE (GET)
+app.get('/orders/:orderId', (req, res) => {
+  const currentUser = getLoggedInUser(req);
+  const orderId = req.params.orderId;
+  const order = orders.find(o => o.id === orderId) || orders[0];
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Order ${order ? order.id : 'Confirmed'} | Regards Sports Club</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/theme.css">
+  </head>
+  <body style="background-color: var(--color-bg-sand);">
+    ${getHeaderHtml('', currentUser)}
+
+    <main class="section-padding">
+      <div class="container">
+        <div class="order-success-card">
+          <div style="font-size: 5rem; margin-bottom: 1.5rem;">🎉</div>
+          <h1 style="font-size: 3.2rem; margin-bottom: 0.8rem; color: var(--color-dark);">Order Confirmed!</h1>
+          <p style="font-size: 1.6rem; color: #555; margin-bottom: 2.5rem;">
+            Thank you, <strong>${order ? order.customer.fullName : 'Valued Customer'}</strong>! We've received your order and our Dhaka showroom team is preparing your kit for express courier dispatch.
+          </p>
+
+          <div style="background: var(--color-bg-sand); border-radius: 8px; padding: 2rem; margin-bottom: 2.5rem; text-align: left; font-size: 1.45rem;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 1rem;">
+              <span style="color: #666;">Order Reference:</span>
+              <strong style="color: var(--color-primary); font-size: 1.6rem;">${order ? order.id : orderId}</strong>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 1rem;">
+              <span style="color: #666;">Estimated Delivery:</span>
+              <strong>${order && order.customer.deliveryZone === 'outside' ? '2 to 3 Business Days (All Bangladesh)' : '24 to 48 Hours (Dhaka City)'}</strong>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 1rem;">
+              <span style="color: #666;">Delivery Address:</span>
+              <span style="text-align: right; max-width: 60%;">${order ? order.customer.address : ''}</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 1rem;">
+              <span style="color: #666;">Payment Method:</span>
+              <span><strong>${order ? order.paymentMethod : 'Cash on Delivery'}</strong> ${order && order.trxId ? `(TrxID: <code>${order.trxId}</code>)` : ''}</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; padding-top: 0.5rem; font-size: 1.7rem; font-weight: 800;">
+              <span>Total Payable Amount:</span>
+              <span style="color: var(--color-primary);">Tk ${(order ? order.total : 0).toLocaleString()}</span>
+            </div>
+          </div>
+
+          <!-- Items Summary -->
+          <div style="text-align: left; margin-bottom: 3rem;">
+            <h3 style="font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.8rem;">Items in Your Package:</h3>
+            <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+              ${order ? order.items.map(item => `
+                <div style="display: flex; align-items: center; gap: 1.4rem; padding: 1rem; background: #fafafa; border-radius: 6px;">
+                  <img src="${(item.featured_image && item.featured_image.url) ? item.featured_image.url : (item.image || '/assets/products/argentinaPlayr.jpeg')}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; font-size: 1.4rem;">${item.product_title || item.title}</div>
+                    <div style="font-size: 1.25rem; color: #666;">${item.variant_title || 'Standard'} • Qty: ${item.quantity}</div>
+                    ${item.properties && Object.keys(item.properties).length ? `
+                      <div style="font-size: 1.15rem; color: var(--color-primary); font-weight: 600;">
+                        ${Object.entries(item.properties).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+                      </div>
+                    ` : ''}
+                  </div>
+                  <div style="font-weight: 700; font-size: 1.45rem;">
+                    Tk ${((item.price > 10000 ? item.price / 100 : item.price) * item.quantity).toLocaleString()}
+                  </div>
+                </div>
+              `).join('') : ''}
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; sm:flex-row; gap: 1.2rem; justify-content: center;">
+            <a href="https://wa.me/8801754724991?text=${encodeURIComponent('Hello Regards Sports Club! I just placed order ' + (order ? order.id : orderId) + '. Can you please confirm receipt?')}" target="_blank" class="btn btn-whatsapp" style="padding: 1.4rem 2.5rem; font-size: 1.45rem;">
+              💬 Chat with Showroom WhatsApp (+880 1754-724991)
+            </a>
+            <a href="/account" class="btn btn-outline" style="padding: 1.4rem 2.5rem; font-size: 1.45rem;">
+              View in My Account &rarr;
+            </a>
+            <a href="/collections/all" class="btn btn-primary" style="padding: 1.4rem 2.5rem; font-size: 1.45rem;">
+              Continue Shopping &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    ${getFooterHtml()}
+    ${getCartDrawerHtml()}
+    <script src="/assets/theme.js"></script>
+  </body>
+  </html>
+  `;
+  res.send(html);
+});
+
+
+app.listen(PORT, () => {
     console.log(`=======================================================`);
     console.log(`🚀 REGARDS SPORTS CLUB STOREFRONT IS LIVE ON LOCALHOST!`);
     console.log(`📡 URL: http://localhost:${PORT}`);

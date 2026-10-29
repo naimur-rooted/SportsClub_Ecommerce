@@ -96,6 +96,8 @@ class ImranTheme {
     const progressText = document.getElementById('free-shipping-text');
 
     if (badge) badge.innerText = cart.item_count;
+    const checkoutBtn = document.querySelector('.cart-drawer__footer a[href="/checkout"]');
+    if (checkoutBtn) checkoutBtn.style.display = cart.item_count === 0 ? 'none' : 'block';
 
     // Free Shipping Progress Calculation
     const totalBDT = cart.total_price / 100;

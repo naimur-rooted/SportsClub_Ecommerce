@@ -2100,3 +2100,229 @@ p { margin-bottom: 1rem; }
     font-size: 1.35rem !important;
   }
 }
+
+
+/* ==========================================================================
+   CUSTOMER AUTHENTICATION, ACCOUNT & CHECKOUT ENGINE
+   ========================================================================== */
+
+/* Header Account Button & Dropdown */
+.header-account-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.header-account-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.2rem !important;
+  border-radius: 3rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.header-account-btn:hover {
+  background: #F0F0F0;
+}
+
+.header-user-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-dark);
+}
+
+.header-account-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 220px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-inner);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  display: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.header-account-menu:hover .header-account-dropdown {
+  display: block;
+}
+
+.header-dropdown-link {
+  display: block;
+  padding: 1.1rem 1.4rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-dark);
+  text-decoration: none;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #F4F4F4;
+}
+
+.header-dropdown-link:hover {
+  background: #F9F9F9;
+  color: var(--color-primary);
+}
+
+/* Authentication Box (Login / Register) */
+.auth-wrapper {
+  max-width: 480px;
+  margin: 5rem auto;
+  padding: 3.5rem 3rem;
+  background: #FFFFFF;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-title {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.auth-subtitle {
+  font-size: 1.4rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 2.8rem;
+}
+
+.auth-form-group {
+  margin-bottom: 1.8rem;
+}
+
+.auth-label {
+  display: block;
+  font-weight: 600;
+  font-size: 1.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 1.3rem 1.5rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-btn);
+  font-size: 1.5rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.auth-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* Customer Account Dashboard */
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3.5rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 992px) {
+  .account-grid {
+    grid-template-columns: 1fr 1.8fr;
+  }
+}
+
+.account-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Checkout Form & Order Summary Layout */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 992px) {
+  .checkout-grid {
+    grid-template-columns: 1.35fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+}
+
+.checkout-section {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.checkout-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--color-dark);
+}
+
+.checkout-input-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .checkout-input-row--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.payment-method-card {
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-inner);
+  padding: 1.6rem;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.payment-method-card:hover,
+.payment-method-card.is-selected {
+  border-color: var(--color-primary);
+  background-color: rgba(214, 58, 47, 0.03);
+}
+
+.checkout-order-summary {
+  background: #FDFDFD;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  position: sticky;
+  top: 100px;
+}
+
+.order-success-card {
+  max-width: 720px;
+  margin: 4rem auto;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 4rem 3rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
